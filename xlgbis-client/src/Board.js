@@ -49,6 +49,26 @@ class WatchableArray extends Watchable {
             return this.#values
         }
     }
+
+    findIndex(predicate) {
+        return this.#values.findIndex(predicate)
+    }
+
+    filter(predicate) {
+        return this.#values.filter(predicate)
+    }
+
+    set(index, elem) {
+        this.#values[index] = elem
+        this._invokeHandlers(this.#values)
+    }
+
+    foreach(action) {
+        for (const elem of this.#values) {
+            action(elem)
+        }
+        this._invokeHandlers(this.#values)
+    }
 }
 
 class WatchableValue extends Watchable {
@@ -67,5 +87,5 @@ class WatchableValue extends Watchable {
 export default class Board {
     static toasts = new WatchableArray()
     static token = new WatchableValue();
-    static panels = new WatchableArray(); // key, type, place
+    static panels = new WatchableArray(); // key, type, place, title
 }
