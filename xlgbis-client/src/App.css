@@ -1,3 +1,12 @@
+html,
+body {
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
 .cust-btn-close {
     width: 8px;
     height: 8px;
@@ -6,10 +15,4 @@
 
 .nav-underline {
     background-color: rgba(0, 0, 0, 0.03);
-}
-
-.tab-content {
-    height: 93vh;
-    overflow: hidden;
-    overflow-y: auto;
 }

@@ -32,7 +32,7 @@ const App = () => {
     }, [toasts, setToasts])
 
     return (
-        <Container fluid className='px-0'>
+        <Container fluid className='px-0 h-100'>
             <ToastContainer className="p-3" position="top-center" style={{ zIndex: 1 }}>
                 {toasts.map((toastData, i) => <DismissableToast header={toastData.header} message={toastData.message} level={toastData.level} key={i} index={i} />)}
             </ToastContainer>
