@@ -18,8 +18,14 @@ class Watchable {
 
 class WatchableArray extends Watchable {
     #values = []
+    #keyId = 0
 
     push(value) {
+        if (typeof value === "object") {
+            if (value.key === undefined) {
+                value.key = (++this.#keyId).toString()
+            }
+        }
         this.#values.push(value)
         this._invokeHandlers(this.#values)
     }
@@ -34,6 +40,12 @@ class WatchableArray extends Watchable {
         let [val] = this.#values.splice(index, 1)
         this._invokeHandlers(this.#values)
         return val
+    }
+
+    removeItem(item) {
+        this.#values = this.#values.filter(e => e !== item)
+        this._invokeHandlers(this.#values)
+        return this.#values
     }
 
     filterInPlace(filter) {
@@ -84,8 +96,12 @@ class WatchableValue extends Watchable {
     }
 }
 
-export default class Board {
-    static toasts = new WatchableArray()
+class Board {
+    static toasts = new WatchableArray() // header: string, message: string, level: 0|1|2, key: auto<string>, expire: auto<number(ms)>
     static token = new WatchableValue();
     static panels = new WatchableArray(); // key, type, place, title
 }
+
+window.dbgBoard = Board
+
+export default Board

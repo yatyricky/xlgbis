@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Tabs, Tab, Button, Col, Row, Container } from "react-bootstrap";
 import Accordion from 'react-bootstrap/Accordion';
 import Board from "./Board.js";
@@ -15,23 +15,23 @@ let wasDragged = false
 export default () => {
     let [panels, setPanels] = useState([])
 
-    function watchPanels(values) {
+    let watchPanels = useCallback((values) => {
         setPanels([...values])
-    }
-    Board.panels.subscribe(watchPanels)
+    }, [Board.panels])
 
     useEffect(() => {
+        Board.panels.subscribe(watchPanels)
         return () => {
             Board.panels.unsubscribe(watchPanels)
         }
-    }, [panels, setPanels])
+    }, [Board.panels])
 
     function testOpen(params) {
         Board.panels.push({
             key: "" + Math.random(),
             type: "acc_query",
             title: "查凭证",
-            place: Math.random() < 0.5 ? "left" : "right"
+            place: "left"
         })
     }
 
@@ -163,7 +163,7 @@ export default () => {
                         <Col>XLG</Col>
                     </Row>
                     <Row className="flex-grow-1">
-                        <Col className="col-1 bg-light">
+                        <Col className="col-1 bg-light cust-side-nav">
                             <Accordion defaultActiveKey={['home', "acc_closing"]} alwaysOpen>
                                 <Accordion.Item eventKey="home">
                                     <Accordion.Body className="p-1">

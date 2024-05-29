@@ -6,21 +6,38 @@ import Permission from "./User/Permission.mjs";
 import Code from "./Code.mjs";
 import jwt from "jsonwebtoken";
 import Common from "./Common.mjs";
+import Encryption from "./Encryption.mjs";
 
-Config.Init()
-
-MySqlWrapper.Init(Config.v.db.host, Config.v.db.user, Config.v.db.port, Config.v.db.password, Config.v.db.database)
+MySqlWrapper.Init(Config.db.host, Config.db.user, Config.db.port, Config.db.password, Config.db.database)
 
 const app = express();
 
 // middlewares
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    // res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 app.use(express.json())
 
 // authorization
 await Permission.Init()
 
 app.use(function (req, res, next) {
-    console.log(req.headers);
     let locals = res.locals
     locals.permit = Permission.ByName.get(req.originalUrl)
     if (!locals.permit) {
@@ -30,13 +47,18 @@ app.use(function (req, res, next) {
     if (locals.permit.checktoken === 1) {
         let token = req.headers.authorization
         if (!token) {
-            return Common.Respond(res, Code.ACCOUNT_UNAUTHORIZED)
+            return Common.Respond(res, Code.USER_UNAUTHORIZED)
         }
         try {
-            locals.jwtPayload = jwt.verify(token.substring(7), Config.v.server.secret)
+            let encPayload = jwt.verify(token.substring(7), Config.server.secret)
+            let payload = Encryption.DecodeSimple(encPayload.data)
+            if (!payload) {
+                return Common.Respond(res, Code.USER_JWT_VALIDATION_ERROR)
+            }
+            locals.jwtPayload = payload
         } catch (error) {
-            console.log(error);
-            return Common.Respond(res, Code.ACCOUNT_JWT_ERROR)
+            console.error(error);
+            return Common.Respond(res, Code.USER_JWT_ERROR)
         }
     }
     next();
@@ -65,8 +87,8 @@ Common.ExpressUseAsync(app, async function (req, res, next) {
 })
 
 // start server
-app.listen(Config.v.server.port, () => {
-    console.log(`App listening on http://localhost:${Config.v.server.port}`);
+app.listen(Config.server.port, () => {
+    console.info(`App listening on http://localhost:${Config.server.port}`);
 });
 
 // routes

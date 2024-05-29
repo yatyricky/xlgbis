@@ -89,10 +89,10 @@ export default class MySqlWrapper {
     }
 
     #DoQuery(sql, callback) {
-        console.log(`[MYSQL]: ${sql}`);
+        console.info(`[MYSQL]: ${sql}`);
         this.#conn.query(sql, (err, result) => {
             if (err) {
-                console.log(err);
+                console.error(err);
                 callback({
                     code: Code.DB_QUERY_ERR,
                     ts: Date.now(),

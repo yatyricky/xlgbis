@@ -7,6 +7,15 @@ body {
     height: 100%;
 }
 
+.cust-side-nav {
+    min-width: 200px;
+}
+
+.cust-width-120 {
+    max-width: 160px;
+    min-width: 160px;
+}
+
 .cust-btn-close {
     width: 8px;
     height: 8px;

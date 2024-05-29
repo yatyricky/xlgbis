@@ -1,7 +1,6 @@
 import { Toast } from "react-bootstrap"
 import Board from "./Board.js"
-import { useState } from "react"
-import React from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 
 const ToastLevel = new Map([
     [1, "warning"],
@@ -14,15 +13,34 @@ const ToastHeader = new Map([
     [2, "警告"]
 ])
 
-export default ({ level, header, message, index }) => {
-    const closeToast = () => {
-        Board.toasts.remove(index)
-    }
+export default ({ data }) => {
+    const ref = useRef(null)
 
-    return <Toast onClose={closeToast} bg={ToastLevel.get(level)}>
+    const closeToast = useCallback(() => {
+        Board.toasts.filterInPlace(e => e.key !== data.key)
+    }, [data])
+
+    useEffect(() => {
+        if (data.expire === undefined) {
+            data.expire = Date.now() + 5000
+        }
+
+        data.timeoutId = setTimeout(() => {
+            closeToast()
+        }, data.expire - Date.now());
+
+        return () => {
+            clearTimeout(data.timeoutId)
+        }
+    }, [data])
+
+    return <Toast ref={ref} onClose={closeToast} bg={ToastLevel.get(data.level)} onMouseEnter={() => {
+        data.expire = Date.now() + 86400 * 1000
+        clearTimeout(data.timeoutId)
+    }}>
         <Toast.Header>
-            <strong className="me-auto">{header || ToastHeader.get(level) || ToastHeader.get(0)}</strong>
+            <strong className="me-auto">{data.header || ToastHeader.get(data.level) || ToastHeader.get(0)}{data.key}</strong>
         </Toast.Header>
-        <Toast.Body>{message}</Toast.Body>
+        <Toast.Body>{data.message}</Toast.Body>
     </Toast>
 }

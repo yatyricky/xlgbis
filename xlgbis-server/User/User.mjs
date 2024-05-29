@@ -4,6 +4,7 @@ import * as Protocol from "../Protocol.mjs";
 import jwt from "jsonwebtoken";
 import Config from "../Config.mjs"
 import MySqlWrapper from "../MySqlWrapper.mjs";
+import Encryption from "../Encryption.mjs";
 
 export default class User {
     static #verificationCode = {}
@@ -34,7 +35,7 @@ export default class User {
         }
 
         if (resp.code !== Code.SUCCESS) {
-            console.log(`[MYSQL]: error, code=${resp.code}`);
+            console.error(`[MYSQL]: error, code=${resp.code}`);
             return false
         }
         if (resp.data.length === 0 || resp.data[0].enable !== 1) {
@@ -55,7 +56,7 @@ export default class User {
             let body = req.body
 
             if (!Protocol.Validate(body, Protocol.Schema.user_register.req)) {
-                return Common.Respond(res, Code.ACCOUNT_INVALID_INPUT)
+                return Common.Respond(res, Code.USER_INVALID_INPUT)
             }
 
             const checkAccountResp = await MySqlWrapper.Inst.Query(`select uid from \`user\` where account='${body.account}' limit 1`)
@@ -64,7 +65,7 @@ export default class User {
             }
 
             if (checkAccountResp.data.length > 0) {
-                return Common.Respond(res, Code.ACCOUNT_ALREADY_EXISTS)
+                return Common.Respond(res, Code.USER_ALREADY_EXISTS)
             }
 
             const insertResp = await MySqlWrapper.Inst.Query(`INSERT INTO \`user\` (\`account\`, \`passhash\`, \`name\`) VALUES ('${body.account}', '${body.passhash}', '${body.name}');`)
@@ -82,7 +83,7 @@ export default class User {
             let body = req.body
 
             if (!Protocol.Validate(body, Protocol.Schema.user_request_qywxbotkey.req)) {
-                return Common.Respond(res, Code.ACCOUNT_INVALID_INPUT)
+                return Common.Respond(res, Code.USER_INVALID_INPUT)
             }
 
             const checkAccountResp = await MySqlWrapper.Inst.Query(`select uid, qywxbotkey from \`user\` where account='${body.account}' limit 1`)
@@ -91,12 +92,17 @@ export default class User {
             }
 
             if (checkAccountResp.data.length === 0) {
-                return Common.Respond(res, Code.ACCOUNT_NOT_EXISTS)
+                return Common.Respond(res, Code.USER_NOT_EXISTS)
             }
 
             let user = checkAccountResp.data[0]
             if (Common.StringIsEmpty(user.qywxbotkey)) {
-                return Common.Respond(res, Code.ACCOUNT_NOT_GRANTED)
+                return Common.Respond(res, Code.USER_NOT_GRANTED)
+            }
+
+            let verificationCode = User.#verificationCode[user.uid]
+            if (verificationCode && verificationCode.ts + Config.user.qywxbotkeyExpr > Date.now()) {
+                return Common.Respond(res, Code.USER_QYEXBOTKEY_SENT)
             }
 
             User.#GenerateVerificationCode(user.uid)
@@ -112,7 +118,7 @@ export default class User {
             })
             let objRespQywx = Common.ObjectParse(await resp.text())
             if (objRespQywx.errcode !== 0) {
-                return Common.Respond(res, Code.ACCOUNT_QYWXBOTKEY_FAILED)
+                return Common.Respond(res, Code.USER_QYWXBOTKEY_FAILED)
             }
 
             Common.Respond(res, Code.SUCCESS)
@@ -124,7 +130,7 @@ export default class User {
         Common.ExpressPostAsync(app, "/user_login", async (req, res) => {
             let body = req.body
             if (!Protocol.Validate(body, Protocol.Schema.user_login.req)) {
-                return Common.Respond(res, Code.ACCOUNT_INVALID_INPUT)
+                return Common.Respond(res, Code.USER_INVALID_INPUT)
             }
 
             const checkAccountResp = await MySqlWrapper.Inst.Query(`select uid from \`user\` where account='${body.account}' limit 1`)
@@ -133,20 +139,26 @@ export default class User {
             }
 
             if (checkAccountResp.data.length === 0) {
-                return Common.Respond(res, Code.ACCOUNT_NOT_EXISTS)
+                return Common.Respond(res, Code.USER_NOT_EXISTS)
             }
 
             let user = checkAccountResp.data[0]
             let verificationCode = User.#verificationCode[user.uid]
             if (!verificationCode || body.qywxbotkey !== verificationCode.code) {
-                return Common.Respond(res, Code.ACCOUNT_QYEXBOTKEY_MISMATCH)
+                return Common.Respond(res, Code.USER_QYEXBOTKEY_MISMATCH)
+            }
+
+            if (verificationCode.ts + Config.user.qywxbotkeyExpr <= Date.now()) {
+                return Common.Respond(res, Code.USER_QYEXBOTKEY_EXPIRED)
             }
 
             // success
             let token = jwt.sign({
-                uid: user.uid,
-                iat: Date.now(),
-            }, Config.v.server.secret, {
+                data: Encryption.EncodeSimple({
+                    uid: user.uid,
+                    iat: Date.now(),
+                })
+            }, Config.server.secret, {
                 expiresIn: 86400,
                 issuer: "xlg.com",
             })
@@ -167,7 +179,7 @@ export default class User {
         Common.ExpressPostAsync(app, "/user_group_set_qywxbotkey", async (req, res) => {
             let body = req.body
             if (!Protocol.Validate(body, Protocol.Schema.user_group_set_qywxbotkey.req)) {
-                return Common.Respond(res, Code.ACCOUNT_INVALID_INPUT)
+                return Common.Respond(res, Code.USER_INVALID_INPUT)
             }
 
             const resp = await MySqlWrapper.Inst.Query(`UPDATE \`user\` SET \`qywxbotkey\` = '${body.qywxbotkey}' WHERE (\`uid\` = '${body.tuid}');`)
@@ -179,7 +191,7 @@ export default class User {
         Common.ExpressPostAsync(app, "/user_group_set_profile", async (req, res) => {
             let body = req.body
             if (!Protocol.Validate(body, Protocol.Schema.user_group_set_profile.req)) {
-                return Common.Respond(res, Code.ACCOUNT_INVALID_INPUT)
+                return Common.Respond(res, Code.USER_INVALID_INPUT)
             }
 
             const resp = await MySqlWrapper.Inst.Query(`UPDATE \`user\` SET \`name\` = '${body.name}' WHERE (\`uid\` = '${body.tuid}');`)

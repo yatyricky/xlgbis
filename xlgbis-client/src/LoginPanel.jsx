@@ -4,8 +4,13 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Timer from "./Timer.jsx"
 import Board from "./Board.js"
+import axios from "axios";
+import Config from './Config.js';
+import Code from './Code.js';
 
 function LoginPanel() {
+    let [inAcc, setInAcc] = useState("")
+    let [inVeriCode, setInVeriCode] = useState("")
     let [state, setState] = useState(false)
 
     function blah(params) {
@@ -14,12 +19,19 @@ function LoginPanel() {
 
     function performLogin(event) {
         event.preventDefault()
-        // Board.toasts.push({
-        //     level: Math.floor(Math.random() * 3),
-        //     header: Math.random() < 0.5 ? "" + Math.random() : undefined,
-        //     message: "当前状态不郧西，比u芯片加埃塔那你四天内公式狮子嗯你的伤口芯片加埃塔那你四天内公式狮子嗯你的伤口芯片加埃塔那你四天内公式狮子嗯你的伤口i啊实打实大大我哪怕" + Math.random()
-        // })
-        Board.token.set("???????")
+        axios.post(`${Config.server}/user_login`, {
+            account: inAcc,
+            qywxbotkey: inVeriCode
+        }).then(resp => {
+            if (resp.data.code !== 0) {
+                Board.toasts.push({
+                    level: 2,
+                    message: Code.ToMessage(resp.data.code)
+                })
+            } else {
+                Board.token.set(resp.data.data)
+            }
+        })
     }
 
     return (
@@ -29,20 +41,31 @@ function LoginPanel() {
             </Row>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>账号</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control type="text" value={inAcc} onChange={e => setInAcc(e.target.value)} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>验证码</Form.Label>
                 <Row>
-                    <Col xs='8'>
-                        <Form.Control type="text" />
+                    <Col>
+                        <Form.Control type="text" value={inVeriCode} onChange={e => setInVeriCode(e.target.value)} />
                     </Col>
-                    <Col className='w-100'>
+                    <Col className='cust-width-120'>
                         <Button className='w-100' disabled={state} onClick={() => {
-                            setState(true)
+                            axios.post(`${Config.server}/user_request_qywxbotkey`, {
+                                account: inAcc
+                            }).then(resp => {
+                                if (resp.data.code !== 0) {
+                                    Board.toasts.push({
+                                        level: 2,
+                                        message: Code.ToMessage(resp.data.code)
+                                    })
+                                } else {
+                                    setState(true)
+                                }
+                            })
                         }}>
-                            {state ? (<Timer seconds={10} formatter={"已发送({0})"} onCompleted={() => setState(false)} />) : "获取验证码"}
+                            {state ? (<Timer seconds={60} formatter={"已发送({0})"} onCompleted={() => setState(false)} />) : "获取验证码"}
                         </Button>
                     </Col>
                 </Row>

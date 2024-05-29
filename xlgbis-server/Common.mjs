@@ -17,12 +17,15 @@ export default class Common {
         try {
             obj = JSON.parse(json)
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
         return obj
     }
 
     static Respond(res, code, data) {
+        if (code === undefined) {
+            throw new Error("Code is undefined")
+        }
         res.status(200).send({ code, ts: Date.now(), data })
     }
 
@@ -34,7 +37,7 @@ export default class Common {
     static ExpressUseAsync(app, asyncFunc) {
         app.use(function (req, res, next) {
             asyncFunc(req, res, next).catch((err) => {
-                console.log(`[ERROR]: ${err}`);
+                console.error(`[ERROR]: ${err}`);
                 res.status(200).send({
                     code: Code.ERROR,
                     ts: Date.now()
@@ -52,7 +55,7 @@ export default class Common {
     static ExpressPostAsync(app, path, asyncFunc) {
         app.post(path, function (req, res, next) {
             asyncFunc(req, res, next).catch((err) => {
-                console.log(`[ERROR]: ${err}`);
+                console.error(`[ERROR]: ${err}`);
                 res.status(200).send({
                     code: Code.ERROR,
                     ts: Date.now()
