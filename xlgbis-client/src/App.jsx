@@ -36,9 +36,12 @@ const App = () => {
             {
                 sceneIndex === 1 ?
                     <Dashboard /> :
-                    <div className='col-md-3 mx-auto mt-5'>
-                        <LoginPanel />
-                    </div>
+                    <Container fluid className="px-0 h-100">
+                        <div className="cust-main-bg" />
+                        <div className='col-3 mx-auto pt-5'>
+                            <LoginPanel />
+                        </div>
+                    </Container>
             }
 
         </Container>

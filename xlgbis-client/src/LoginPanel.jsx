@@ -7,6 +7,7 @@ import Board from "./Board.js"
 import axios from "axios";
 import Config from './Config.js';
 import Code from './Code.js';
+import Image from 'react-bootstrap/Image';
 
 function LoginPanel() {
     let [inAcc, setInAcc] = useState("")
@@ -37,8 +38,15 @@ function LoginPanel() {
     return (
         <Form className='shadow px-3 py-3' onSubmit={performLogin}>
             <Row>
-                <h2 className='text-center'>XLG</h2>
+                <Col></Col>
+                <Col className='mx-auto'>
+                    <Row>
+                        <Image src='xlg3-200.png' fluid className='cust-width-160' />
+                    </Row>
+                </Col>
+                <Col></Col>
             </Row>
+
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>账号</Form.Label>
                 <Form.Control type="text" value={inAcc} onChange={e => setInAcc(e.target.value)} />
@@ -50,7 +58,7 @@ function LoginPanel() {
                     <Col>
                         <Form.Control type="text" value={inVeriCode} onChange={e => setInVeriCode(e.target.value)} />
                     </Col>
-                    <Col className='cust-width-120'>
+                    <Col className='cust-width-160'>
                         <Button className='w-100' disabled={state} onClick={() => {
                             axios.post(`${Config.server}/user_request_qywxbotkey`, {
                                 account: inAcc
