@@ -63,6 +63,16 @@ export const Schema = {
         res: {}
     },
 
+    user_auto_login: {
+        req: {
+            "type": "object",
+            "properties": {
+            },
+            "required": []
+        },
+        res: {}
+    },
+
     user_group_set_qywxbotkey: {
         req: {
             "type": "object",

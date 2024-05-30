@@ -3,36 +3,53 @@ import Config from "./Config.js";
 import Board from "./Board.js";
 import Code from "./Code.js";
 
-export const HttpTaskStatus = {
-    Success: 0,
-    Loading: 1,
-    Error: 2
-}
-
 function defaultFunc() {
 }
 
-function HttpTask(path, body, onStatus, onData) {
-    onStatus = onStatus || defaultFunc
+/**
+ * 
+ * @param {String} path 
+ * @param {Object} body 
+ * @param {((isLoading: boolean) => void) | undefined} onLoading 
+ * @param {((data: any) => void) | undefined} onData 
+ * @param {((code: number) => void) | undefined} onError 
+ * @param {boolean | undefined} suppressErrorToast 
+ * @param {Object} additionalHeaders
+ */
+function HttpTask(path, body, onLoading, onData, onError, suppressErrorToast, additionalHeaders) {
+    onLoading = onLoading || defaultFunc
     onData = onData || defaultFunc
-    onStatus(HttpTaskStatus.Loading)
-    axios.post(`${Config.server}${path}`, body).then(resp => {
+    onError = onError || defaultFunc
+    onLoading(true)
+    let headers = {
+        Authorization: `Bearer ${Board.token.get()}`,
+        ...additionalHeaders
+    }
+    axios.post(`${Config.server}${path}`, body, { headers }).then(resp => {
         if (resp.data.code !== 0) {
-            Board.toasts.push({
-                level: 2,
-                message: Code.ToMessage(resp.data.code)
-            })
-            onStatus(HttpTaskStatus.Error)
+            if (suppressErrorToast !== true) {
+                Board.toasts.push({
+                    level: 2,
+                    message: Code.ToMessage(resp.data.code)
+                })
+            }
+
+            onError(resp.data.code)
+            onLoading(false)
         } else {
             onData(resp.data.data)
-            onStatus(HttpTaskStatus.Success)
+            onLoading(false)
         }
     }).catch(err => {
-        Board.toasts.push({
-            level: 2,
-            message: Code.ToMessage(Code.Codes.NETWORK_CLIENT_ERROR)
-        })
-        onStatus(HttpTaskStatus.Error)
+        if (suppressErrorToast !== true) {
+            Board.toasts.push({
+                level: 2,
+                message: Code.ToMessage(Code.Codes.NETWORK_CLIENT_ERROR)
+            })
+        }
+
+        onError(Code.Codes.NETWORK_CLIENT_ERROR)
+        onLoading(false)
     })
 }
 

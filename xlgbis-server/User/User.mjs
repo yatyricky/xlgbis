@@ -166,6 +166,16 @@ export default class User {
             Common.Respond(res, Code.SUCCESS, token)
         })
 
+        Common.ExpressPostAsync(app, "/user_auto_login", async (req, res) => {
+            let body = req.body
+            if (!Protocol.Validate(body, Protocol.Schema.user_auto_login.req)) {
+                return Common.Respond(res, Code.USER_INVALID_INPUT)
+            }
+
+            // success
+            Common.Respond(res, Code.SUCCESS)
+        })
+
         Common.ExpressPostAsync(app, "/user_list", async (req, res) => {
             const resp = await MySqlWrapper.Inst.Query(`SELECT \`account\`,\`name\`,\`qywxbotkey\` FROM \`user\`;`)
             if (resp.code !== Code.SUCCESS) { return Common.Respond(res, resp.code) }

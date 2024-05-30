@@ -1,37 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Spinner } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Timer from "./Timer.jsx"
 import Board from "./Board.js"
-import axios from "axios";
-import Config from './Config.js';
-import Code from './Code.js';
 import Image from 'react-bootstrap/Image';
-import HttpTask, { HttpTaskStatus } from './HttpTask.js';
+import HttpTask from './HttpTask.js';
 
 function LoginPanel() {
     let [inAcc, setInAcc] = useState("")
     let [inVeriCode, setInVeriCode] = useState("")
     let [state, setState] = useState(false)
-    let [veriCodeHttp, setVeriCodeHttp] = useState(HttpTaskStatus.Loading)
+    let [veriCodeLoading, setVeriCodeLoading] = useState(false)
+    let [submitLoading, setSubmitLoading] = useState(false)
 
     function performLogin(event) {
         event.preventDefault()
-        axios.post(`${Config.server}/user_login`, {
+        setSubmitLoading(true)
+        HttpTask("/user_login", {
             account: inAcc,
             qywxbotkey: inVeriCode
-        }).then(resp => {
-            if (resp.data.code !== 0) {
-                Board.toasts.push({
-                    level: 2,
-                    message: Code.ToMessage(resp.data.code)
-                })
-            } else {
-                Board.token.set(resp.data.data)
-            }
+        }, (isLoading) => {
+            setSubmitLoading(isLoading)
+        }, (token) => {
+            Board.token.set(token)
+            localStorage.setItem("token", token)
+            console.log(`set local ${token}`);
         })
     }
+
+    function requestCode() {
+        setState(true)
+        HttpTask("/user_request_qywxbotkey", { account: inAcc }, (isLoading) => {
+            setVeriCodeLoading(isLoading)
+        }, undefined, () => {
+            setState(false)
+        })
+    }
+
+    useEffect(() => {
+        let token = localStorage.getItem("token")
+        console.log(`get local ${token}`);
+        if (!String.isEmptyText(token)) {
+            HttpTask("/user_auto_login", {}, undefined, () => {
+                Board.token.set(token)
+            }, undefined, undefined, {
+                Authorization: `Bearer ${token}`
+            })
+        }
+    }, [Board.token])
 
     return (
         <Form className='shadow px-3 py-3' onSubmit={performLogin}>
@@ -53,24 +70,24 @@ function LoginPanel() {
                         <Form.Control type="text" value={inVeriCode} onChange={e => setInVeriCode(e.target.value)} />
                     </Col>
                     <Col className='cust-width-160'>
-                        <Button className='w-100' disabled={state} onClick={() => {
-                            setState(true)
-                            HttpTask("/user_request_qywxbotkey", { account: inAcc }, (httpStatus) => {
-                                setVeriCodeHttp(httpStatus)
-                                if (httpStatus !== HttpTaskStatus.Loading) {
-                                    setState(false)
-                                }
-                            })
-                        }}>
-                            {state ? (veriCodeHttp === HttpTaskStatus.Loading ? (<span>
-                                <Spinner size='sm' animation="border" role="status" />获取验证码</span>) : (
-                                <Timer seconds={60} formatter={"已发送({0})"} onCompleted={() => setState(false)} />
-                            )) : "获取验证码"}
+                        <Button className='w-100' disabled={state} onClick={() => requestCode()}>
+                            {state ?
+                                (veriCodeLoading ?
+                                    (<span>
+                                        <Spinner size='sm' animation="border" role="status" />
+                                        <span className='px-1'>获取验证码</span>
+                                    </span>) :
+                                    (<Timer seconds={60} formatter={"已发送({0})"} onCompleted={() => setState(false)} />)
+                                ) :
+                                "获取验证码"
+                            }
                         </Button>
                     </Col>
                 </Row>
             </Form.Group>
-            <Button variant="primary" type="submit">登录</Button>
+            <Button variant="primary" type="submit" disabled={submitLoading}>
+                {submitLoading ? <Spinner size='sm' animation="border" role="status" >登录</Spinner> : "登录"}
+            </Button>
         </Form>
     );
 }
