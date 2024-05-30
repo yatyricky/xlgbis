@@ -86,8 +86,9 @@ function LoginPanel() {
                 </Row>
             </Form.Group>
             <Button variant="primary" type="submit" disabled={submitLoading}>
-                {submitLoading ? <Spinner size='sm' animation="border" role="status" >登录</Spinner> : "登录"}
+                {submitLoading ? <span><Spinner size='sm' animation="border" role="status" ></Spinner><span className='px-1'>登录</span></span> : "登录"}
             </Button>
+            <Button onClick={()=>{Board.token.set("???")}}>??</Button>
         </Form>
     );
 }

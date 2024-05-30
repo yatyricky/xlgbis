@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Tabs, Tab, Button, Col, Row, Container } from "react-bootstrap";
+import { Tabs, Tab, Button, Col, Row, Container, Image, Dropdown } from "react-bootstrap";
 import Accordion from 'react-bootstrap/Accordion';
 import Board from "./Board.js";
 import Vector2 from "./Vector2.js";
@@ -125,8 +125,8 @@ export default () => {
 
     let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-    leftDrop.set(vw / 12 - 10, 30, vw / 12 * 11 / 2 - 10, vh - 100)
-    rightDrop.set(vw / 12 + vw / 12 * 11 / 2, 30, vw / 12 * 11 / 2 - 20, vh - 100)
+    leftDrop.set(200 - 10, 45, (vw - 200) / 2 - 10, vh - 100)
+    rightDrop.set(200 - 10 + (vw - 200) / 2, 45, (vw - 200) / 2 - 5, vh - 100)
 
     return (
         <Container fluid className="px-0 h-100" onMouseDown={(evt) => beginDrag(evt)} onMouseUp={(evt) => endDrag(evt)} onMouseMove={(evt) => doDrag(evt)}>
@@ -157,10 +157,27 @@ export default () => {
                 height: rightDrop.h,
                 zIndex: 99
             }} />
-            <Row className="h-100 w-100 px-0">
+            <Row className="h-100 w-100">
                 <div className="d-flex flex-column">
                     <Row className="border-bottom">
-                        <Col>XLG</Col>
+                        <Col><Image src='xlg3-200.png' style={{ height: "40px" }} /></Col>
+                        <Col />
+                        <Col className="col-auto">
+                            <Dropdown>
+                                <Dropdown.Toggle variant="link" id="dropdown-basic">
+                                    Dropdown Button
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item>Action</Dropdown.Item>
+                                    <Dropdown.Item>Another action</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => {
+                                        localStorage.setItem("token", null)
+                                        Board.token.set("")
+                                    }}>退出</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </Col>
                     </Row>
                     <Row className="flex-grow-1">
                         <Col className="col-1 bg-light cust-side-nav">
