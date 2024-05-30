@@ -4,7 +4,7 @@ import LoginPanel from './LoginPanel.jsx';
 import { ToastContainer, Container } from 'react-bootstrap';
 import Board from './Board.js';
 import DismissableToast from './DismissableToast.jsx';
-import Dashboard from './Dashboard.jsx';
+import Dashboard from './Dashboard/Dashboard.jsx';
 
 const App = () => {
     // toast

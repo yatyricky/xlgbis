@@ -54,6 +54,11 @@ class WatchableArray extends Watchable {
         return this.#values
     }
 
+    /**
+     * 
+     * @param {number} index 
+     * @returns {any | any[]}
+     */
     get(index) {
         if (index !== undefined) {
             return this.#values[index]
@@ -100,6 +105,7 @@ class Board {
     static toasts = new WatchableArray() // header: string, message: string, level: 0|1|2, key: auto<string>, expire: auto<number(ms)>
     static token = new WatchableValue();
     static panels = new WatchableArray(); // key, type, place, title
+    static userName = new WatchableValue();
 }
 
 window.dbgBoard = Board

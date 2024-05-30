@@ -60,7 +60,14 @@ export const Schema = {
             },
             "required": ["account", "qywxbotkey"]
         },
-        res: {}
+        res: {
+            "type": "object",
+            "properties": {
+                "token": { "type": "NotNullString" },
+                "name": { "type": "NotNullString" },
+            },
+            "required": ["token", "name"]
+        }
     },
 
     user_auto_login: {
@@ -70,7 +77,13 @@ export const Schema = {
             },
             "required": []
         },
-        res: {}
+        res: {
+            "type": "object",
+            "properties": {
+                "name": { "type": "NotNullString" },
+            },
+            "required": ["name"]
+        }
     },
 
     user_group_set_qywxbotkey: {
@@ -96,6 +109,38 @@ export const Schema = {
         },
         res: {}
     },
+
+    user_has_permit: {
+        req: {
+            "type": "object",
+            "properties": {
+                "pname": { "type": "NotNullString" },
+                "bid": { "type": "number" },
+            },
+            "required": ["pname"]
+        },
+        res: {
+            "type": "object",
+            "properties": {
+                "flag": { "type": "boolean" },
+            },
+            "required": ["flag"]
+        }
+    },
+
+    user_list: {
+        req: {
+            "type": "object",
+            "properties": {},
+            "required": []
+        },
+        res: {
+            "type": "array",
+            "items": {
+                "type": "object"
+            }
+        }
+    }
 }
 
 export function Validate(value, schema) {

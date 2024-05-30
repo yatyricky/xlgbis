@@ -111,7 +111,7 @@ export default class MySqlWrapper {
 
             if (this.#tasks.length > 0) {
                 const next = this.#tasks.shift()
-                this.#DoConnect(next.sql, next.callback)
+                this.#DoConnect(next.sql, next.wrapper)
             } else {
                 this.#querying = false
             }

@@ -22,10 +22,11 @@ function LoginPanel() {
             qywxbotkey: inVeriCode
         }, (isLoading) => {
             setSubmitLoading(isLoading)
-        }, (token) => {
-            Board.token.set(token)
-            localStorage.setItem("token", token)
-            console.log(`set local ${token}`);
+        }, (data) => {
+            Board.token.set(data.token)
+            Board.userName.set(data.name)
+            localStorage.setItem("token", data.token)
+            console.log(`set local ${data}`);
         })
     }
 
@@ -42,13 +43,19 @@ function LoginPanel() {
         let token = localStorage.getItem("token")
         console.log(`get local ${token}`);
         if (!String.isEmptyText(token)) {
-            HttpTask("/user_auto_login", {}, undefined, () => {
+            setSubmitLoading(true)
+            HttpTask("/user_auto_login", {}, (status) => {
+                setSubmitLoading(status)
+            }, (data) => {
                 Board.token.set(token)
-            }, undefined, undefined, {
+                Board.userName.set(data.name)
+            }, () => {
+                localStorage.removeItem("token")
+            }, undefined, {
                 Authorization: `Bearer ${token}`
             })
         }
-    }, [Board.token])
+    }, [Board.token.get()])
 
     return (
         <Form className='shadow px-3 py-3' onSubmit={performLogin}>
