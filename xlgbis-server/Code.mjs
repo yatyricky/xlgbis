@@ -11,6 +11,7 @@ class CodeIncrement {
 const db = new CodeIncrement(1000)
 const acc = new CodeIncrement(2000)
 const permission = new CodeIncrement(3000)
+const network = new CodeIncrement(3000)
 
 const Code = {
     SUCCESS: 0,
@@ -37,6 +38,8 @@ const Code = {
     PERMISSION_DENIAL: permission.Next(),
     PERMISSION_UNSPECIFIED: permission.Next(),
     PERMISSION_REQ_MISSING_BOOK_ID: permission.Next(),
+
+    NETWORK_CLIENT_ERROR: network.Next(),
 }
 
 export default Code;

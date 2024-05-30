@@ -13,6 +13,8 @@ const name2msg = {
 }
 
 class Code {
+    static Codes = ServerCode
+
     static ToMessage(id) {
         let reved = rev.get(id)
         if (!reved) {

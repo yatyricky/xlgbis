@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Spinner } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Timer from "./Timer.jsx"
@@ -8,15 +8,13 @@ import axios from "axios";
 import Config from './Config.js';
 import Code from './Code.js';
 import Image from 'react-bootstrap/Image';
+import HttpTask, { HttpTaskStatus } from './HttpTask.js';
 
 function LoginPanel() {
     let [inAcc, setInAcc] = useState("")
     let [inVeriCode, setInVeriCode] = useState("")
     let [state, setState] = useState(false)
-
-    function blah(params) {
-
-    }
+    let [veriCodeHttp, setVeriCodeHttp] = useState(HttpTaskStatus.Loading)
 
     function performLogin(event) {
         event.preventDefault()
@@ -56,20 +54,18 @@ function LoginPanel() {
                     </Col>
                     <Col className='cust-width-160'>
                         <Button className='w-100' disabled={state} onClick={() => {
-                            axios.post(`${Config.server}/user_request_qywxbotkey`, {
-                                account: inAcc
-                            }).then(resp => {
-                                if (resp.data.code !== 0) {
-                                    Board.toasts.push({
-                                        level: 2,
-                                        message: Code.ToMessage(resp.data.code)
-                                    })
-                                } else {
-                                    setState(true)
+                            setState(true)
+                            HttpTask("/user_request_qywxbotkey", { account: inAcc }, (httpStatus) => {
+                                setVeriCodeHttp(httpStatus)
+                                if (httpStatus !== HttpTaskStatus.Loading) {
+                                    setState(false)
                                 }
                             })
                         }}>
-                            {state ? (<Timer seconds={60} formatter={"已发送({0})"} onCompleted={() => setState(false)} />) : "获取验证码"}
+                            {state ? (veriCodeHttp === HttpTaskStatus.Loading ? (<span>
+                                <Spinner size='sm' animation="border" role="status" />获取验证码</span>) : (
+                                <Timer seconds={60} formatter={"已发送({0})"} onCompleted={() => setState(false)} />
+                            )) : "获取验证码"}
                         </Button>
                     </Col>
                 </Row>
