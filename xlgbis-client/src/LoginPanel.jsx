@@ -37,14 +37,10 @@ function LoginPanel() {
 
     return (
         <Form className='shadow px-3 py-3' onSubmit={performLogin}>
-            <Row>
-                <Col></Col>
-                <Col className='mx-auto'>
-                    <Row>
-                        <Image src='xlg3-200.png' fluid className='cust-width-160' />
-                    </Row>
-                </Col>
-                <Col></Col>
+            <Row className='' >
+                <Col className='flex-grow-1'></Col>
+                <Image src='xlg3-200.png' className='cust-width-200 center-block img-responsive' />
+                <Col className='flex-grow-1'></Col>
             </Row>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
