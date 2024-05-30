@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Tabs, Tab, Button, Col, Row, Container } from "react-bootstrap";
 import Board from "../Board.js";
 import Vector2 from "../Vector2.js";
@@ -17,11 +17,10 @@ let wasDragged = false
 export default () => {
     let [panels, setPanels] = useState([])
 
-    let watchPanels = useCallback((values) => {
-        setPanels([...values])
-    }, [Board.panels.get()])
-
     useEffect(() => {
+        let watchPanels = (values) => {
+            setPanels([...values])
+        }
         Board.panels.subscribe(watchPanels)
         return () => {
             Board.panels.unsubscribe(watchPanels)
@@ -162,14 +161,32 @@ export default () => {
                                 if (left.length > 0 && right.length > 0) {
                                     return (
                                         <Row className="h-100">
-                                            <Col className="px-1 border border-secondary"><Tabs variant="underline" activeKey={leftPanelKey} onSelect={(k) => setLeftPanelKey(k)}>{left.map(renderPanelTab)}</Tabs></Col>
-                                            <Col className="px-1 border border-secondary"><Tabs variant="underline" activeKey={rightPanelKey} onSelect={(k) => setRightPanelKey(k)}>{right.map(renderPanelTab)}</Tabs></Col>
+                                            <Col className="px-1 border border-secondary">
+                                                <Tabs
+                                                    variant="underline"
+                                                    activeKey={leftPanelKey}
+                                                    onSelect={(k) => setLeftPanelKey(k)}
+                                                >{left.map(renderPanelTab)}</Tabs>
+                                            </Col>
+                                            <Col className="px-1 border border-secondary">
+                                                <Tabs
+                                                    variant="underline"
+                                                    activeKey={rightPanelKey}
+                                                    onSelect={(k) => setRightPanelKey(k)}
+                                                >{right.map(renderPanelTab)}</Tabs>
+                                            </Col>
                                         </Row>
                                     )
                                 } else {
                                     return (
                                         <Row className="h-100">
-                                            <Col className="px-1 border border-secondary"><Tabs variant="underline" activeKey={leftPanelKey} onSelect={(k) => setLeftPanelKey(k)}>{panels.map(renderPanelTab)}</Tabs></Col>
+                                            <Col className="px-1 border border-secondary">
+                                                <Tabs
+                                                    variant="underline"
+                                                    activeKey={leftPanelKey}
+                                                    onSelect={(k) => setLeftPanelKey(k)}
+                                                >{panels.map(renderPanelTab)}</Tabs>
+                                            </Col>
                                         </Row>
                                     )
                                 }

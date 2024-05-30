@@ -8,6 +8,11 @@ const itemClass = "w-100 h-100 text-start rounded-0"
 const itemVariant = "light"
 const itemStyle = { paddingLeft: "20px" }
 
+const PanelDefine = {
+    user_manager: { unique: true },
+    acc_query: {},
+}
+
 export default () => {
     let [hasUserPermit, setHasUserPermit] = useState(false)
 
@@ -16,6 +21,44 @@ export default () => {
             setHasUserPermit(data.flag)
         }, undefined, true)
     }, [Board.token.get()])
+
+    function selectPanel(key) {
+        for (const dom of document.getElementsByClassName("nav-link")) {
+            if (dom.getAttribute("data-rr-ui-event-key") === key) {
+                dom.click()
+                break
+            }
+        }
+    }
+
+    function _doOpenPanel(type, title) {
+        Board.panels.push({ type, title, place: "left" })
+        setTimeout(() => {
+            let last = Board.panels.get(Board.panels.get().length - 1)
+            selectPanel(last?.key)
+        }, 0);
+    }
+
+    function openPanel(type, title) {
+        let define = PanelDefine[type]
+        if (!define) {
+            return Board.toasts.push({
+                level: 2,
+                message: `unknown panel ${type}`
+            })
+        }
+
+        if (define.unique) {
+            let find = Board.panels.filter(e => e.type === type)
+            if (find.length === 0) {
+                _doOpenPanel(type, title)
+            } else {
+                selectPanel(find[0].key)
+            }
+        } else {
+            _doOpenPanel(type, title)
+        }
+    }
 
     return (
         <Col className="col-1 bg-light cust-side-nav">
@@ -46,7 +89,8 @@ export default () => {
 
                 <Accordion.Item eventKey="acc_closing">
                     <Accordion.Body className="p-1">
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant} onClick={() => testOpen()}>结账</Button>
+                        <Button className={itemClass} style={itemStyle} variant={itemVariant}
+                            onClick={() => openPanel("acc_query", "查凭证")}>结账</Button>
                     </Accordion.Body>
                 </Accordion.Item>
 
@@ -54,15 +98,8 @@ export default () => {
                     <Accordion.Item eventKey="system">
                         <Accordion.Header>System</Accordion.Header>
                         <Accordion.Body className="p-1">
-                            <Button className={itemClass} style={itemStyle} variant={itemVariant} onClick={() => {
-                                if (Board.panels.filter(e => e.type === "user_manager").length === 0) {
-                                    Board.panels.push({
-                                        type: "user_manager",
-                                        title: "User Manager",
-                                        place: "left"
-                                    })
-                                }
-                            }}>User</Button>
+                            <Button className={itemClass} style={itemStyle} variant={itemVariant}
+                                onClick={() => openPanel("user_manager", "User Manager")}>User</Button>
                         </Accordion.Body>
                     </Accordion.Item>
                 ) : <></>}

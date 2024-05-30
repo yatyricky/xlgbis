@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import HttpTask from "../HttpTask";
-import { Spinner } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import { MultiGrid, Grid } from "react-virtualized"
 import Board from "../Board";
 
@@ -10,12 +10,13 @@ export default () => {
     let [viewPortWidth, setViewPortWidth] = useState(0)
 
     useLayoutEffect(() => {
-        console.log("recalc");
         function CalculateViewportWidth() {
-            let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+            let vw = Math.max(window.innerWidth || 0)
             let panels = Board.panels.get()
             let windowsCount = panels.filter(e => e.place === "left").length < panels.length ? 2 : 1
-            setViewPortWidth((vw - 200) / windowsCount - 20)
+            let widthToSet = (vw - 200) / windowsCount - 30
+            console.log(widthToSet);
+            setViewPortWidth(widthToSet)
         }
         window.addEventListener('resize', CalculateViewportWidth);
         CalculateViewportWidth()
@@ -62,17 +63,21 @@ export default () => {
 
     return (
         isLoading ?
-            (<Spinner animation="border" role="status" />) :
-            (<MultiGrid
-                cellRenderer={cellRenderer}
-                columnCount={Object.keys(index2field).length}
-                columnWidth={75}
-                height={150}
-                rowCount={userList.length + 1}
-                rowHeight={40}
-                width={viewPortWidth}
-                // fixedColumnCount={2}
-                fixedRowCount={1}
-            />)
+            (
+                <Spinner animation="border" role="status" />
+            ) :
+            (
+                <MultiGrid
+                    cellRenderer={cellRenderer}
+                    columnCount={Object.keys(index2field).length}
+                    columnWidth={75}
+                    height={150}
+                    rowCount={userList.length + 1}
+                    rowHeight={40}
+                    width={viewPortWidth}
+                    // fixedColumnCount={2}
+                    fixedRowCount={1}
+                />
+            )
     )
 }

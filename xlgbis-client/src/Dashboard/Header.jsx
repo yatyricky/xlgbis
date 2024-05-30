@@ -9,7 +9,7 @@ export default () => {
     }
 
     return (
-        <Row className="border-bottom">
+        <Row className="border-bottom" style={{backgroundColor:"rgb(63, 81, 180, 0.1)"}}>
             <Col><Image src='xlg3-200.png' style={{ height: "40px" }} /></Col>
             <Col />
             <Col className="col-auto">
