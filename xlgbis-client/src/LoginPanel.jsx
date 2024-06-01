@@ -26,7 +26,6 @@ function LoginPanel() {
             Board.token.set(data.token)
             Board.userName.set(data.name)
             localStorage.setItem("token", data.token)
-            console.log(`set local ${data}`);
         })
     }
 
@@ -41,7 +40,6 @@ function LoginPanel() {
 
     useEffect(() => {
         let token = localStorage.getItem("token")
-        console.log(`get local ${token}`);
         if (!String.isEmptyText(token)) {
             setSubmitLoading(true)
             HttpTask("/user_auto_login", {}, (status) => {

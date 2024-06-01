@@ -15,7 +15,6 @@ export default () => {
             let panels = Board.panels.get()
             let windowsCount = panels.filter(e => e.place === "left").length < panels.length ? 2 : 1
             let widthToSet = (vw - 200) / windowsCount - 30
-            console.log(widthToSet);
             setViewPortWidth(widthToSet)
         }
         window.addEventListener('resize', CalculateViewportWidth);

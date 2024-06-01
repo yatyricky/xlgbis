@@ -1,5 +1,4 @@
-import { Toast } from "react-bootstrap"
-import Board from "./Board.js"
+import Board from "../Board.js"
 import React, { useCallback, useEffect, useRef } from "react"
 
 const ToastLevel = new Map([
@@ -13,7 +12,7 @@ const ToastHeader = new Map([
     [2, "警告"]
 ])
 
-export default ({ data }) => {
+const DismissableToast = ({ data }) => {
     const ref = useRef(null)
 
     const closeToast = useCallback(() => {
@@ -44,3 +43,5 @@ export default ({ data }) => {
         <Toast.Body>{data.message}</Toast.Body>
     </Toast>
 }
+
+export default DismissableToast
