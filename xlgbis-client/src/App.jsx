@@ -110,53 +110,8 @@ const App = () => {
                     {cyclic.renderChildren(node)}
                 </div >
             )
-        }],
-        ["AnchoredDiv", (node, i) => {
-            return (
-                <AnchoredDiv key={i} node={node}>
-                    {cyclic.renderChildren(node)}
-                </AnchoredDiv>
-            )
-        }],
-        ["AnchoredButton", (node, i) => {
-            return (
-                <AnchoredButton key={i} node={node} onClick={() => node.CompButton.onClick()}>
-                    {cyclic.renderChildren(node)}
-                </AnchoredButton>
-            )
-        }],
-        ["AnchoredText", (node, i) => {
-            let c = node.CompText
-            return (
-                <AnchoredText key={i} node={node} text={c.text} fit={c.fit} align={c.align} wrap={c.wrap}>
-                    {cyclic.renderChildren(node)}
-                </AnchoredText>
-            )
-        }],
-        ["VerticalLayoutGroup", (node, i) => {
-            let c = node.CompVLGroup
-            return (
-                <VerticalLayoutGroup key={i} node={node} gap={c.gap} fit={c.fit}>
-                    {cyclic.renderChildren(node)}
-                </VerticalLayoutGroup>
-            )
-        }]
+        }]]
     ])
-
-    cyclic.renderChildren = (node) => {
-        return node.children.filter(e => e.active).map((e, i) => {
-            e.parent = node
-            return cyclic.renderNode(e, i)
-        })
-    }
-
-    cyclic.renderNode = (node, i) => {
-        let renderer = cyclic.renderMap.get(node.type)
-        if (!renderer) {
-            throw new Error(`Unimplemented node type ${node.type}`)
-        }
-        return renderer(node, i)
-    }
 
     // <Container fluid className='px-0 h-100'>
     //     <ToastContainer className="p-3" position="top-center" style={{ zIndex: 1 }}>

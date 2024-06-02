@@ -1,27 +1,27 @@
-import Rect from "./Rect"
+import Rect from "./Maths/Rect"
 
-/**
- * @typedef RectTransform
- * @property {Rect} size
- * @property {import("./Anchored/Transform").AnchorName | import("./Anchored/Transform").AnchorData} anchor
- * @property {Rect} rect
- * @property {import("./Anchored/Transform").PivotName | import("./Anchored/Transform").PivotData} pivot
- */
+// /**
+//  * @typedef RectTransform
+//  * @property {Rect} size
+//  * @property {import("./Anchored/Transform").AnchorName | import("./Anchored/Transform").AnchorData} anchor
+//  * @property {Rect} rect
+//  * @property {import("./Anchored/Transform").PivotName | import("./Anchored/Transform").PivotData} pivot
+//  */
 
-/**
- * @typedef UINode
- * @property {string} name
- * @property {string} type
- * @property {boolean} active
- * @property {RectTransform} rt
- * @property {React.CSSProperties} style
- * @property {UINode} parent
- * @property {UINode[]} children
- */
+// /**
+//  * @typedef UINode
+//  * @property {string} name
+//  * @property {string} type
+//  * @property {boolean} active
+//  * @property {RectTransform} rt
+//  * @property {React.CSSProperties} style
+//  * @property {UINode} parent
+//  * @property {UINode[]} children
+//  */
 
-/**
- * @type {UINode}
- */
+// /**
+//  * @type {UINode}
+//  */
 const UI = {
     // Root
     type: "Root",
