@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { Transform } from "./Transform.js"
 
 // overflow, scroll, hidden, fit
 export default ({ children, node, gap, fit }) => {

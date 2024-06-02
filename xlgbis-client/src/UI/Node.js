@@ -1,3 +1,4 @@
+import React from "react"
 import AnchoredDiv from "../Anchored/AnchoredDiv.jsx"
 import Rect from "../Maths/Rect.js"
 
@@ -40,6 +41,11 @@ const PivotName = {
 
 export default class Node {
     /**
+     * @type {Node}
+     */
+    static Root
+
+    /**
      * 
      * @param {Rect} parentSize 
      * @param {{ xmin: number, ymin: number, xmax: number, ymax: number }} anchor 
@@ -59,6 +65,12 @@ export default class Node {
         return new Rect(l, t, w, h)
     }
 
+    static UpdateRoot(viewport) {
+        let root = Node.Root
+        root.anchorRect = viewport
+        root.parent.size = viewport
+    }
+
     /**
      * 
      * @param {string} name 
@@ -67,7 +79,7 @@ export default class Node {
      * 
      */
     constructor(name, parent, rectProps) {
-        const { anchor, anchorRect, pivot, style } = rectProps
+        let { anchor, anchorRect, pivot, style } = rectProps || {}
         this.name = name
         this.active = true
         /** @type {Node[]} */
@@ -89,6 +101,7 @@ export default class Node {
         anchorRect.y = anchorRect.y || 0
         this.anchorRect = anchorRect
 
+        pivot = pivot || "center"
         if (typeof pivot === "string") {
             let convertPivot = PivotName[pivot]
             if (!convertPivot) {
@@ -99,8 +112,13 @@ export default class Node {
         }
         this.pivot = pivot
         this.style = style || {}
+        this.size = new Rect()
 
         this.SetParent(parent)
+
+        if (Node.AutoBuild) {
+            this.BuildTree()
+        }
     }
 
     /**
@@ -137,7 +155,34 @@ export default class Node {
 
         this.parent = node
         node.children.push(this)
-        this.size = Node.Transform(parent.size, this.anchor, this.anchorRect, this.pivot)
+    }
+
+    Find(path) {
+        let current = this
+        let paths = path.split("/")
+        let i = 0
+        do {
+            const p = paths[i++]
+            if (String.isEmptyText(p)) {
+                continue
+            }
+            current = current.children.find(e => e.name === p)
+            if (current === undefined) {
+                return undefined
+            }
+        } while (i < paths.length);
+        return current
+    }
+
+    BuildTree() {
+        this.size = Node.Transform(this.parent.size, this.anchor, this.anchorRect, this.pivot)
+
+        if (this.setSize !== undefined) {
+            this.setSize(this.size)
+        }
+        for (const child of this.children) {
+            child.BuildTree()
+        }
     }
 
     RenderChildren() {

@@ -1,5 +1,6 @@
 import AnchoredText from "../Anchored/AnchoredText.jsx"
 import Node from "./Node.js"
+import React from "react"
 
 export default class TextNode extends Node {
 

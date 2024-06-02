@@ -1,21 +1,27 @@
-import React from "react"
-import { Transform } from "./Transform.js"
+import React, { useState } from "react"
 
 export default ({ children, node, onClick }) => {
-    let rt = node.rt
-    rt.size = Transform(node.parent.rt.size, rt.anchor, rt.rect, rt.pivot)
+    let [size, setSize] = useState(node.size)
+    node.setSize = setSize
+    console.log("got onclic", onClick, node.style);
 
     return (
         <button
             style={{
                 ...node.style,
                 position: "fixed",
-                width: rt.size.w,
-                height: rt.size.h,
-                left: rt.size.x,
-                top: rt.size.y,
+                width: size.w,
+                height: size.h,
+                left: size.x,
+                top: size.y,
             }}
-            onClick={onClick}
+            onClick={() => {
+                console.log(">>>>>>");
+                // onClick()
+            }}
+            onMouseEnter={() => {
+                console.log(".....");
+            }}
         >{children}</button>
     )
 }
