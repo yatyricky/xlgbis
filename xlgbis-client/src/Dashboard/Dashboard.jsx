@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Tabs, Tab, Button, Col, Row, Container } from "react-bootstrap";
 import Board from "../Board.js";
-import Vector2 from "../Vector2.js";
-import Rect from "../Rect.js";
+import Vector2 from "../Maths/Vector2.js";
+import Rect from "../Maths/Rect.js";
 import Header from "./Header.jsx";
 import NavSideBar from "./NavSideBar.jsx";
 import UserList from "../User/UserList.jsx";
