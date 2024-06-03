@@ -10,17 +10,15 @@ export default ({ children, node, onClick }) => {
             style={{
                 ...node.style,
                 position: "fixed",
-                width: size.w,
-                height: size.h,
                 left: size.x,
                 top: size.y,
+                width: size.w,
+                height: size.h,
             }}
             onClick={() => {
                 console.log(">>>>>>");
                 // onClick()
-            }}
-            onMouseEnter={() => {
-                console.log(".....");
+                node.buttonProps.onClick()
             }}
         >{children}</button>
     )

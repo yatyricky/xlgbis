@@ -23,10 +23,10 @@ export default ({ children, node }) => {
             style={{
                 ...node.style,
                 position: "fixed",
-                width: size.w,
-                height: size.h,
                 left: size.x,
                 top: size.y,
+                width: size.w,
+                height: size.h,
             }}
         >{children}</div>
     )
