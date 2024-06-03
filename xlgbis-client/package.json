@@ -1,5 +1,5 @@
 {
-  "name": "react-webpack-from-scratch",
+  "name": "xlgbis-client",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,13 +9,10 @@
     "build": "webpack --mode production"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nef.",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-virtualized": "^9.22.5"
+    "axios": "^1.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",

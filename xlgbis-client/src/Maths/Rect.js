@@ -40,4 +40,8 @@ export default class Rect {
     ToString() {
         return `(${this.x},${this.y},${this.w},${this.h})`
     }
+
+    Equals(o) {
+        return Math.Approx(this.x, o.x) && Math.Approx(this.y, o.y) && Math.Approx(this.w, o.w) && Math.Approx(this.y, o.y)
+    }
 }

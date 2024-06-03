@@ -1,18 +1,15 @@
 import "./App.css";
 import "./Polyfill.js"
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
 import Node from "./UI/Node.js";
-import RootNode from "./UI/RootNode.js";
-import Rect from "./Maths/Rect.js";
+import System from "./System.js";
+import Login from "./Objects/Login.js"
+import App from "./Objects/App.js"
 
-const domNode = document.getElementById('root');
-const root = createRoot(domNode);
+let system = System.Inst
+system.AddObject(new App())
+system.AddObject(new Login())
 
-Node.Root = new Node("root")
-Node.AutoBuild = true
-Node.Root.parent = { size: new Rect() }
+system.Awake()
+system.Start()
+
 window.DBGRoot = Node.Root
-
-root.render(<App />);

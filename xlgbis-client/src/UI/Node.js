@@ -1,5 +1,3 @@
-import React from "react"
-import AnchoredDiv from "../Anchored/AnchoredDiv.jsx"
 import Rect from "../Maths/Rect.js"
 
 const AnchorName = {
@@ -65,21 +63,14 @@ export default class Node {
         return new Rect(l, t, w, h)
     }
 
-    static UpdateRoot(viewport) {
-        let root = Node.Root
-        root.anchorRect = viewport
-        root.parent.size = viewport
-    }
-
     /**
      * 
      * @param {string} name 
      * @param {Node} parent 
-     * @param {{anchor: "top-left" | "top-center" | "top-right" | "middle-left" | "middle-center" | "center" | "middle-right" | "bottom-left" | "bottom-center" | "bottom-right" | "stretch-left" | "stretch-center" | "stretch-right" | "stretch-stretch" | "stretch" | "top-stretch" | "middle-stretch" | "bottom-stretch" | { xmin: number, ymin: number, xmax: number, ymax: number }, anchorRect: Rect, pivot: "top-left" | "top-center" | "top-right" | "middle-left" | "middle-center" | "center" | "middle-right" | "bottom-left" | "bottom-center" | "bottom-right" | {x: number, y: number}, style: React.CSSProperties } rectProps
-     * 
+     * @param {{anchor: "top-left" | "top-center" | "top-right" | "middle-left" | "middle-center" | "center" | "middle-right" | "bottom-left" | "bottom-center" | "bottom-right" | "stretch-left" | "stretch-center" | "stretch-right" | "stretch-stretch" | "stretch" | "top-stretch" | "middle-stretch" | "bottom-stretch" | { xmin: number, ymin: number, xmax: number, ymax: number }, anchorRect: Rect, pivot: "top-left" | "top-center" | "top-right" | "middle-left" | "middle-center" | "center" | "middle-right" | "bottom-left" | "bottom-center" | "bottom-right" | {x: number, y: number}, style: React.CSSProperties }} rectProps
      */
     constructor(name, parent, rectProps) {
-        let { anchor, anchorRect, pivot, style } = rectProps || {}
+        let { anchor, anchorRect, pivot, style, fitWidth, fitHeight } = rectProps || {}
         this.name = name
         this.active = true
         /** @type {Node[]} */
@@ -100,6 +91,8 @@ export default class Node {
         anchorRect.x = anchorRect.x || 0
         anchorRect.y = anchorRect.y || 0
         this.anchorRect = anchorRect
+        this.fitWidth = fitWidth || false
+        this.fitHeight = fitHeight || false
 
         pivot = pivot || "center"
         if (typeof pivot === "string") {
@@ -113,11 +106,13 @@ export default class Node {
         this.pivot = pivot
         this.style = style || {}
         this.size = new Rect()
+        this.dom = this.GetDom()
+        this.dom.setAttribute("data-name", this.name)
 
         this.SetParent(parent)
 
         if (Node.AutoBuild) {
-            this.BuildTree()
+            this.parent.BuildTree()
         }
     }
 
@@ -174,26 +169,63 @@ export default class Node {
         return current
     }
 
-    BuildTree() {
-        this.size = Node.Transform(this.parent.size, this.anchor, this.anchorRect, this.pivot)
+    GetDom() {
+        return document.createElement("div")
+    }
 
-        if (this.setSize !== undefined) {
-            this.setSize(this.size)
+    SetSize(size, postAction) {
+        if (size === undefined) {
+            size = this.size
+        } else if (this.size.Equals(size)) {
+            return
         }
+
+        let newStyle = {
+            position: "fixed",
+            left: `${size.x}px`,
+            top: `${size.y}px`,
+            width: this.fitWidth ? "fit-content" : `${size.w}px`,
+            height: this.fitHeight ? undefined : `${size.h}px`,
+        }
+
+        console.log(`set ${this.name} with ${JSON.stringify(newStyle)}`);
+
+        let style = this.dom.style
+        for (const key in newStyle) {
+            let e = newStyle[key]
+            if (style[key] !== e) {
+                style[key] = e
+            }
+        }
+
+        if (!postAction && (this.fitWidth || this.fitHeight)) {
+            if (this.observer === undefined) {
+                window.requestAnimationFrame(() => {
+                    console.log(`what my size? ${this.dom.offsetWidth} ${this.dom.offsetHeight}`);
+                    this.SetSize(Node.Transform(this.parent.size, AnchorName.center, {
+                        x: this.anchorRect.x,
+                        y: this.anchorRect.y,
+                        w: this.dom.offsetWidth,
+                        h: this.dom.offsetHeight,
+                    }, this.pivot), true)
+                })
+                // setTimeout(() => {
+
+                // }, 0);
+            }
+        }
+
+        this.size = size
+    }
+
+    BuildTree() {
+        this.SetSize(Node.Transform(this.parent.size, this.anchor, this.anchorRect, this.pivot))
+
         for (const child of this.children) {
+            if (child.dom.parentNode !== this.dom) {
+                this.dom.appendChild(child.dom)
+            }
             child.BuildTree()
         }
-    }
-
-    RenderChildren() {
-        return this.children.filter(e => e.active).map((e, i) => e.Render(i))
-    }
-
-    Render(key) {
-        return (
-            <AnchoredDiv key={key} node={this}>
-                {this.RenderChildren()}
-            </AnchoredDiv>
-        )
     }
 }

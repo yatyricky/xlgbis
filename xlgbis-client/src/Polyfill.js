@@ -16,4 +16,13 @@ if (!String.isEmptyText) {
     }
 }
 
+if (!Math.Approx) {
+    Math.Approx = function (a, b, p) {
+        if (p === undefined) {
+            p = 0.01
+        }
+        return Math.abs(a - b) < p
+    }
+}
+
 export default {}
