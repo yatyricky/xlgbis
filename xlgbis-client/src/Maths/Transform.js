@@ -64,7 +64,6 @@ const PivotName = {
 export function Transform(parentSize, anchor, anchorRect, pivot) {
     if (parentSize.offsetLeft !== undefined) {
         parentSize = new Rect(parentSize.offsetLeft, parentSize.offsetTop, parentSize.offsetWidth, parentSize.offsetHeight)
-        console.log("set", parentSize.ToString());
     }
 
     anchor = anchor || "center"

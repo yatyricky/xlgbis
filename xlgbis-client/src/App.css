@@ -20,10 +20,6 @@ body {
     background-size: cover;
 }
 
-.cust-side-nav {
-    min-width: 200px;
-}
-
 .cust-width-160 {
     max-width: 160px;
     min-width: 160px;
@@ -32,12 +28,6 @@ body {
 .cust-width-200 {
     max-width: 200px;
     min-width: 200px;
-}
-
-.cust-btn-close {
-    width: 8px;
-    height: 8px;
-    padding-top: 0px;
 }
 
 .nav-underline {

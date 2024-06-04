@@ -7,6 +7,7 @@ import Header from "./Header.jsx";
 import NavSideBar from "./NavSideBar.jsx";
 import UserList from "../User/UserList.jsx";
 import { Transform } from "../Maths/Transform.js";
+import PanelTabButton from "./PanelTabButton.jsx";
 
 let tempDragKey = null
 let beginDragPos = null
@@ -99,15 +100,7 @@ export default () => {
             <Tab
                 eventKey={e.key}
                 key={i}
-                title={(
-                    <Container data-label="panel-tab" fluid className="px-0" onMouseDown={() => beginDragTab(e.key)}>
-                        <Row className="mx-0">
-                            <Col className="px-1 col-auto">{e.title}</Col>
-                            {((e.place === "left" && e.key === leftPanelKey) || (e.place === "right" && e.key === rightPanelKey)) ?
-                                (<Col className="btn-close cust-btn-close" onClick={() => closeTab(e.key)}></Col>) : <></>}
-                        </Row>
-                    </Container>
-                )}>
+                title={<PanelTabButton onMouseDown={() => beginDragTab(e.key)} onClose={() => closeTab(e.key)} title={e.title} showClose={(e.place === "left" && e.key === leftPanelKey) || (e.place === "right" && e.key === rightPanelKey)} />}>
                 {(<div className="py-1">
                     {e.type === "user_manager" ? <UserList /> : <></>}
                 </div>

@@ -9,19 +9,18 @@ export default () => {
     let [userList, setUserList] = useState([])
     let [viewPortWidth, setViewPortWidth] = useState(0)
 
-    useLayoutEffect(() => {
-        function CalculateViewportWidth() {
-            let vw = Math.max(window.innerWidth || 0)
-            let panels = Board.panels.get()
-            let windowsCount = panels.filter(e => e.place === "left").length < panels.length ? 2 : 1
-            let widthToSet = (vw - 200) / windowsCount - 30
-            console.log(widthToSet);
-            setViewPortWidth(widthToSet)
-        }
-        window.addEventListener('resize', CalculateViewportWidth);
-        CalculateViewportWidth()
-        return () => { window.removeEventListener('resize', CalculateViewportWidth); }
-    }, [Board.panels.get().map(e => `${e.key}-${e.place}`).join("/")])
+    // useLayoutEffect(() => {
+    //     function CalculateViewportWidth() {
+    //         let vw = Math.max(window.innerWidth || 0)
+    //         let panels = Board.panels.get()
+    //         let windowsCount = panels.filter(e => e.place === "left").length < panels.length ? 2 : 1
+    //         let widthToSet = (vw - 200) / windowsCount - 30
+    //         setViewPortWidth(widthToSet)
+    //     }
+    //     window.addEventListener('resize', CalculateViewportWidth);
+    //     CalculateViewportWidth()
+    //     return () => { window.removeEventListener('resize', CalculateViewportWidth); }
+    // }, [Board.panels.get().map(e => `${e.key}-${e.place}`).join("/")])
 
     let index2field = {
         ["0"]: "account",

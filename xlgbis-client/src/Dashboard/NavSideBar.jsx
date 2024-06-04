@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col } from "react-bootstrap";
-import Accordion from 'react-bootstrap/Accordion';
+import { Button, Col, ButtonGroup, DropdownButton, Dropdown } from "react-bootstrap";
 import Board from "../Board.js";
 import HttpTask from "../HttpTask.js";
-
-const itemClass = "w-100 h-100 text-start rounded-0"
-const itemVariant = "light"
-const itemStyle = { paddingLeft: "20px" }
+import DropdownButtonExt from "./DropdownButtonExt.jsx";
 
 const PanelDefine = {
     user_manager: { unique: true },
@@ -61,50 +57,32 @@ export default () => {
     }
 
     return (
-        <Col className="px-0 col-1 bg-light cust-side-nav">
-            <Accordion defaultActiveKey={['home', "acc_closing"]} alwaysOpen>
+        <div className="px-0 bg-light" style={{ width: "120px" }}>
+            <ButtonGroup vertical style={{ width: "100%" }}>
+                <Button style={{ textAlign: "left" }} variant="light"><i class="bi bi-house" style={{ margin: "4px" }} />主页</Button>
 
-                <Accordion.Item eventKey="home">
-                    <Accordion.Body className="p-1">
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant}>主页</Button>
-                    </Accordion.Body>
-                </Accordion.Item>
+                <DropdownButtonExt title="凭证" icon="bi bi-file-text" id="acc_docs" variant="light">
+                    <Dropdown.Item eventKey="accdoc_new" >录凭证</Dropdown.Item>
+                    <Dropdown.Item eventKey="accdoc_query" >查凭证</Dropdown.Item>
+                </DropdownButtonExt>
 
-                <Accordion.Item eventKey="acc_docs">
-                    <Accordion.Header>凭证</Accordion.Header>
-                    <Accordion.Body className="p-1">
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant}>录凭证</Button>
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant}>查凭证</Button>
-                    </Accordion.Body>
-                </Accordion.Item>
+                <DropdownButtonExt title="报表" icon="bi bi-table" id="acc_reports" variant="light">
+                    <Dropdown.Item eventKey="accrep_balsht" >资产负债表</Dropdown.Item>
+                    <Dropdown.Item eventKey="accrep_revsht" >利润表</Dropdown.Item>
+                    <Dropdown.Item eventKey="accrep_cassht" >现金流量表</Dropdown.Item>
+                </DropdownButtonExt>
 
-                <Accordion.Item eventKey="acc_reports">
-                    <Accordion.Header>报表</Accordion.Header>
-                    <Accordion.Body className="p-1">
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant}>资产负债表</Button>
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant}>利润表</Button>
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant}>现金流量表</Button>
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="acc_closing">
-                    <Accordion.Body className="p-1">
-                        <Button className={itemClass} style={itemStyle} variant={itemVariant}
-                            onClick={() => openPanel("acc_query", "查凭证")}>结账</Button>
-                    </Accordion.Body>
-                </Accordion.Item>
+                <Button style={{ textAlign: "left" }} onClick={() => openPanel("acc_query", "查凭证")} variant="light">
+                <i class="bi bi-check-all" style={{ margin: "4px" }} />
+                    结账
+                    </Button>
 
                 {hasUserPermit ? (
-                    <Accordion.Item eventKey="system">
-                        <Accordion.Header>System</Accordion.Header>
-                        <Accordion.Body className="p-1">
-                            <Button className={itemClass} style={itemStyle} variant={itemVariant}
-                                onClick={() => openPanel("user_manager", "User Manager")}>User</Button>
-                        </Accordion.Body>
-                    </Accordion.Item>
+                    <DropdownButtonExt title="System" icon="bi bi-gear" id="system" variant="light">
+                        <Dropdown.Item eventKey="accrep_balsht" onClick={() => openPanel("user_manager", "User Manager")}>User</Dropdown.Item>
+                    </DropdownButtonExt>
                 ) : <></>}
-
-            </Accordion>
-        </Col>
+            </ButtonGroup>
+        </div>
     )
 }
