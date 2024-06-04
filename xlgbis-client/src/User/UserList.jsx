@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import HttpTask from "../HttpTask";
 import { Container, Spinner } from "react-bootstrap";
-import { MultiGrid, Grid } from "react-virtualized"
+import { MultiGrid, Grid, ArrowKeyStepper } from "react-virtualized"
 import Board from "../Board";
 import { Transform } from "../Maths/Transform";
 import Rect from "../Maths/Rect.js";
@@ -9,19 +9,6 @@ import Rect from "../Maths/Rect.js";
 export default ({ panelData }) => {
     let [isLoading, setIsLoading] = useState(true)
     let [userList, setUserList] = useState([])
-
-    // useLayoutEffect(() => {
-    //     function CalculateViewportWidth() {
-    //         let vw = Math.max(window.innerWidth || 0)
-    //         let panels = Board.panels.get()
-    //         let windowsCount = panels.filter(e => e.place === "left").length < panels.length ? 2 : 1
-    //         let widthToSet = (vw - 200) / windowsCount - 30
-    //         setViewPortWidth(widthToSet)
-    //     }
-    //     window.addEventListener('resize', CalculateViewportWidth);
-    //     CalculateViewportWidth()
-    //     return () => { window.removeEventListener('resize', CalculateViewportWidth); }
-    // }, [Board.panels.get().map(e => `${e.key}-${e.place}`).join("/")])
 
     let index2field = {
         ["0"]: "account",
@@ -43,7 +30,18 @@ export default ({ panelData }) => {
      */
     function cellRenderer(cell) {
         if (cell.rowIndex === 0) {
-            return (<div key={cell.key} style={cell.style}>{index2field[cell.columnIndex.toString()]}</div>)
+            return (
+                <div
+                    key={cell.key}
+                    style={{
+                        ...cell.style,
+                        fontWeight: "bold",
+                        border: "1px solid gray"
+                    }}
+                >
+                    {index2field[cell.columnIndex.toString()]}
+                </div>
+            )
         }
 
         /**
@@ -58,9 +56,22 @@ export default ({ panelData }) => {
             return (<></>)
         }
         let prop = user[fName]
-        return (<div key={cell.key} style={{ ...cell.style, textWrap: "nowrap" }}>{"" + prop}</div>)
+        return (
+            <div
+                key={cell.key}
+                style={{
+                    ...cell.style,
+                    textWrap: "nowrap",
+                    border: "1px solid gray"
+                }}
+            >
+                {"" + prop}
+            </div>
+        )
     }
 
+    let columnCount = Object.keys(index2field).length
+    let rowCount = userList.length + 1
     return (
         isLoading ?
             (
@@ -68,18 +79,25 @@ export default ({ panelData }) => {
             ) :
             (
                 <div data-label="MultiGrid-parent" style={{ width: "100%", height: "100%", overflow: "hidden", position: "relative" }}>
-                    <MultiGrid
-                        cellRenderer={cellRenderer}
-                        columnCount={Object.keys(index2field).length}
-                        columnWidth={75}
-                        height={300}
-                        rowCount={userList.length + 1}
-                        rowHeight={40}
-                        width={300}
-                        style={{ position: "absolute" }}
-                    />
-                </div>
+                    <ArrowKeyStepper columnCount={columnCount} rowCount={rowCount} mode="cells">
+                        {({ onSectionRendered, scrollToColumn, scrollToRow }) => (
+                            <Grid
+                                columnCount={columnCount}
+                                onSectionRendered={onSectionRendered}
+                                rowCount={rowCount}
+                                scrollToColumn={scrollToColumn}
+                                scrollToRow={scrollToRow}
 
+                                cellRenderer={cellRenderer}
+                                columnWidth={75}
+                                height={rowCount * 40}
+                                rowHeight={40}
+                                width={300}
+                                style={{ position: "absolute", border: "1px solid gray" }}
+                            />
+                        )}
+                    </ArrowKeyStepper>
+                </div>
             )
     )
 }
