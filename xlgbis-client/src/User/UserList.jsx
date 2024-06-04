@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import HttpTask from "../HttpTask";
 import { Container, Spinner } from "react-bootstrap";
 import { MultiGrid, Grid } from "react-virtualized"
 import Board from "../Board";
+import { Transform } from "../Maths/Transform";
+import Rect from "../Maths/Rect.js";
 
 export default () => {
     let [isLoading, setIsLoading] = useState(true)
     let [userList, setUserList] = useState([])
     let [viewPortWidth, setViewPortWidth] = useState(0)
+    let wrapperRef = useRef(null)
 
     // useLayoutEffect(() => {
     //     function CalculateViewportWidth() {
@@ -60,23 +63,33 @@ export default () => {
         return (<div key={cell.key} style={cell.style}>{"" + prop}</div>)
     }
 
+    let size = new Rect()
+    if (wrapperRef.current) {
+        size = Transform(wrapperRef.current, "stretch")
+    }
+
+    console.log("transformed size", size.ToString());
+
     return (
         isLoading ?
             (
                 <Spinner animation="border" role="status" />
             ) :
             (
-                <MultiGrid
-                    cellRenderer={cellRenderer}
-                    columnCount={Object.keys(index2field).length}
-                    columnWidth={75}
-                    height={150}
-                    rowCount={userList.length + 1}
-                    rowHeight={40}
-                    width={viewPortWidth}
+                <div style={{ width: "100%", height: "100%" }} ref={wrapperRef}>
+                    <MultiGrid
+                        cellRenderer={cellRenderer}
+                        columnCount={Object.keys(index2field).length}
+                        columnWidth={75}
+                        height={size.h}
+                        rowCount={userList.length + 1}
+                        rowHeight={40}
+                        width={size.w}
                     // fixedColumnCount={2}
-                    fixedRowCount={1}
-                />
+                    // fixedRowCount={1}
+                    />
+                </div>
+
             )
     )
 }

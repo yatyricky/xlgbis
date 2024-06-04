@@ -4,7 +4,7 @@ import Board from "../Board.js";
 import Vector2 from "../Maths/Vector2.js";
 import Rect from "../Maths/Rect.js";
 import Header from "./Header.jsx";
-import NavSideBar from "./NavSideBar.jsx";
+import NavSideBar, { PanelDefine } from "./NavSideBar.jsx";
 import UserList from "../User/UserList.jsx";
 import { Transform } from "../Maths/Transform.js";
 import PanelTabButton from "./PanelTabButton.jsx";
@@ -96,15 +96,25 @@ export default () => {
     let [rightPanelKey, setRightPanelKey] = useState("")
 
     let renderPanelTab = (e, i) => {
+        let define = PanelDefine[e.type]
+        if (!define) {
+            console.error(`Undefined panel type ${e.type}`)
+        }
         return (
             <Tab
                 eventKey={e.key}
                 key={i}
-                title={<PanelTabButton onMouseDown={() => beginDragTab(e.key)} onClose={() => closeTab(e.key)} title={e.title} showClose={(e.place === "left" && e.key === leftPanelKey) || (e.place === "right" && e.key === rightPanelKey)} />}>
-                {(<div className="py-1">
-                    {e.type === "user_manager" ? <UserList /> : <></>}
-                </div>
-                )}
+                title={
+                    <PanelTabButton
+                        onMouseDown={() => beginDragTab(e.key)}
+                        onClose={() => closeTab(e.key)}
+                        title={e.title}
+                        showClose={(e.place === "left" && e.key === leftPanelKey) || (e.place === "right" && e.key === rightPanelKey)}
+                    />
+                }
+                className="h-100"
+            >
+                {<div className="py-1 h-100"><define.comp /></div>}
             </Tab>
         )
     }

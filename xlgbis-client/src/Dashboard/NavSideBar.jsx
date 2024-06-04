@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, ButtonGroup, DropdownButton, Dropdown } from "react-bootstrap";
+import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import Board from "../Board.js";
 import HttpTask from "../HttpTask.js";
 import DropdownButtonExt from "./DropdownButtonExt.jsx";
+import UserList from "../User/UserList.jsx";
+import AccDocQuery from "../User/AccDocQuery.jsx";
 
-const PanelDefine = {
-    user_manager: { unique: true },
-    acc_query: {},
+export const PanelDefine = {
+    user_manager: { comp: UserList, unique: true },
+    acc_query: { comp: AccDocQuery },
 }
 
 export default () => {
@@ -59,7 +61,7 @@ export default () => {
     return (
         <div className="px-0 bg-light" style={{ width: "120px" }}>
             <ButtonGroup vertical style={{ width: "100%" }}>
-                <Button style={{ textAlign: "left" }} variant="light"><i class="bi bi-house" style={{ margin: "4px" }} />主页</Button>
+                <Button style={{ textAlign: "left" }} variant="light"><i className="bi bi-house" style={{ margin: "4px" }} />主页</Button>
 
                 <DropdownButtonExt title="凭证" icon="bi bi-file-text" id="acc_docs" variant="light">
                     <Dropdown.Item eventKey="accdoc_new" >录凭证</Dropdown.Item>
@@ -73,9 +75,9 @@ export default () => {
                 </DropdownButtonExt>
 
                 <Button style={{ textAlign: "left" }} onClick={() => openPanel("acc_query", "查凭证")} variant="light">
-                <i class="bi bi-check-all" style={{ margin: "4px" }} />
+                    <i className="bi bi-check-all" style={{ margin: "4px" }} />
                     结账
-                    </Button>
+                </Button>
 
                 {hasUserPermit ? (
                     <DropdownButtonExt title="System" icon="bi bi-gear" id="system" variant="light">

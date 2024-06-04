@@ -62,7 +62,9 @@ const PivotName = {
  * @returns {Rect}
  */
 export function Transform(parentSize, anchor, anchorRect, pivot) {
-    if (parentSize.offsetLeft !== undefined) {
+    if (parentSize === undefined || parentSize === null) {
+        parentSize = new Rect(0, 0, 1, 1)
+    } else if (parentSize.offsetLeft !== undefined) {
         parentSize = new Rect(parentSize.offsetLeft, parentSize.offsetTop, parentSize.offsetWidth, parentSize.offsetHeight)
     }
 

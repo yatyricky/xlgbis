@@ -33,3 +33,7 @@ body {
 .nav-underline {
     background-color: rgba(0, 0, 0, 0.03);
 }
+
+.tab-content {
+    height: 100%
+}

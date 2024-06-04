@@ -7,10 +7,10 @@ export default class Rect {
      * @param {number} h 
      */
     constructor(x, y, w, h) {
-        this.x = x
-        this.y = y
-        this.w = w
-        this.h = h
+        this.x = x || 0
+        this.y = y || 0
+        this.w = w || 0
+        this.h = h || 0
     }
 
     /**
