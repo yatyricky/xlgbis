@@ -114,7 +114,7 @@ export default () => {
                 }
                 className="h-100"
             >
-                {<div className="py-1 h-100"><define.comp /></div>}
+                {<div className="h-100"><define.comp panelData={e} /></div>}
             </Tab>
         )
     }
@@ -159,21 +159,21 @@ export default () => {
                     <Header />
                     <Row className="mx-0 flex-grow-1">
                         <NavSideBar />
-                        <div data-label="workspace" ref={refWs} className="px-0 col">
+                        <div id="workspace" data-label="workspace" ref={refWs} className="px-0 col">
                             {(() => {
                                 let left = panels.filter(e => e.place === "left")
                                 let right = panels.filter(e => e.place === "right")
                                 if (left.length > 0 && right.length > 0) {
                                     return (
                                         <Row className="mx-0 h-100">
-                                            <Col className="px-1 border border-secondary">
+                                            <Col className="px-1 border border-secondary" style={{ display: "flex", flexDirection: "column" }}>
                                                 <Tabs
                                                     variant="underline"
                                                     activeKey={leftPanelKey}
                                                     onSelect={(k) => setLeftPanelKey(k)}
                                                 >{left.map(renderPanelTab)}</Tabs>
                                             </Col>
-                                            <Col className="px-1 border border-secondary">
+                                            <Col className="px-1 border border-secondary" style={{ display: "flex", flexDirection: "column" }}>
                                                 <Tabs
                                                     variant="underline"
                                                     activeKey={rightPanelKey}
@@ -185,7 +185,7 @@ export default () => {
                                 } else {
                                     return (
                                         <Row className="mx-0 h-100">
-                                            <Col className="px-1 border border-secondary">
+                                            <Col className="px-1 border border-secondary" style={{ display: "flex", flexDirection: "column" }}>
                                                 <Tabs
                                                     variant="underline"
                                                     activeKey={leftPanelKey}

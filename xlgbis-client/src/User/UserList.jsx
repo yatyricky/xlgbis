@@ -6,11 +6,9 @@ import Board from "../Board";
 import { Transform } from "../Maths/Transform";
 import Rect from "../Maths/Rect.js";
 
-export default () => {
+export default ({ panelData }) => {
     let [isLoading, setIsLoading] = useState(true)
     let [userList, setUserList] = useState([])
-    let [viewPortWidth, setViewPortWidth] = useState(0)
-    let wrapperRef = useRef(null)
 
     // useLayoutEffect(() => {
     //     function CalculateViewportWidth() {
@@ -60,15 +58,8 @@ export default () => {
             return (<></>)
         }
         let prop = user[fName]
-        return (<div key={cell.key} style={cell.style}>{"" + prop}</div>)
+        return (<div key={cell.key} style={{ ...cell.style, textWrap: "nowrap" }}>{"" + prop}</div>)
     }
-
-    let size = new Rect()
-    if (wrapperRef.current) {
-        size = Transform(wrapperRef.current, "stretch")
-    }
-
-    console.log("transformed size", size.ToString());
 
     return (
         isLoading ?
@@ -76,17 +67,16 @@ export default () => {
                 <Spinner animation="border" role="status" />
             ) :
             (
-                <div style={{ width: "100%", height: "100%" }} ref={wrapperRef}>
+                <div data-label="MultiGrid-parent" style={{ width: "100%", height: "100%", overflow: "hidden", position: "relative" }}>
                     <MultiGrid
                         cellRenderer={cellRenderer}
                         columnCount={Object.keys(index2field).length}
                         columnWidth={75}
-                        height={size.h}
+                        height={300}
                         rowCount={userList.length + 1}
                         rowHeight={40}
-                        width={size.w}
-                    // fixedColumnCount={2}
-                    // fixedRowCount={1}
+                        width={300}
+                        style={{ position: "absolute" }}
                     />
                 </div>
 

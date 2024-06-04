@@ -35,5 +35,5 @@ body {
 }
 
 .tab-content {
-    height: 100%
+    flex-grow: 1;
 }
