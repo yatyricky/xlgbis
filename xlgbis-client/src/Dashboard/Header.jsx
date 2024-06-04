@@ -9,8 +9,8 @@ export default () => {
     }
 
     return (
-        <Row className="border-bottom" style={{backgroundColor:"rgb(63, 81, 180, 0.1)"}}>
-            <Col><Image src='xlg3-200.png' style={{ height: "40px" }} /></Col>
+        <Row className="mx-0 border-bottom" style={{backgroundColor:"rgb(63, 81, 180, 0.1)"}}>
+            <Col className="px-0"><Image src='xlg3-200.png' style={{ height: "40px" }} /></Col>
             <Col />
             <Col className="col-auto">
                 <Dropdown>

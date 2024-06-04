@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Spinner } from 'react-bootstrap';
+import { Col, Row, Spinner, Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Timer from "./Timer.jsx"
@@ -58,45 +58,51 @@ function LoginPanel() {
     }, [Board.token.get()])
 
     return (
-        <Form className='shadow px-3 py-3' onSubmit={performLogin}>
-            <Row className='' >
-                <Col className='flex-grow-1'></Col>
-                <Image src='xlg3-200.png' className='cust-width-200 center-block img-responsive' />
-                <Col className='flex-grow-1'></Col>
-            </Row>
+        <Container fluid className="px-0 h-100">
+            <div className="cust-main-bg" />
+            <div style={{ width: 500, margin:"0 auto", paddingTop: 80 }}>
+                <Form className='shadow px-3 py-3' onSubmit={performLogin}>
+                    <Row className='' >
+                        <Col className='flex-grow-1'></Col>
+                        <Image src='xlg3-200.png' className='cust-width-200 center-block img-responsive' />
+                        <Col className='flex-grow-1'></Col>
+                    </Row>
 
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>账号</Form.Label>
-                <Form.Control type="text" value={inAcc} onChange={e => setInAcc(e.target.value)} />
-            </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label>账号</Form.Label>
+                        <Form.Control type="text" value={inAcc} onChange={e => setInAcc(e.target.value)} />
+                    </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>验证码</Form.Label>
-                <Row>
-                    <Col>
-                        <Form.Control type="text" value={inVeriCode} onChange={e => setInVeriCode(e.target.value)} />
-                    </Col>
-                    <Col className='cust-width-160'>
-                        <Button className='w-100' disabled={state} onClick={() => requestCode()}>
-                            {state ?
-                                (veriCodeLoading ?
-                                    (<span>
-                                        <Spinner size='sm' animation="border" role="status" />
-                                        <span className='px-1'>获取验证码</span>
-                                    </span>) :
-                                    (<Timer seconds={60} formatter={"已发送({0})"} onCompleted={() => setState(false)} />)
-                                ) :
-                                "获取验证码"
-                            }
-                        </Button>
-                    </Col>
-                </Row>
-            </Form.Group>
-            <Button variant="primary" type="submit" disabled={submitLoading}>
-                {submitLoading ? <span><Spinner size='sm' animation="border" role="status" ></Spinner><span className='px-1'>登录</span></span> : "登录"}
-            </Button>
-            <Button onClick={()=>{Board.token.set("???")}}>??</Button>
-        </Form>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>验证码</Form.Label>
+                        <Row>
+                            <Col>
+                                <Form.Control type="text" value={inVeriCode} onChange={e => setInVeriCode(e.target.value)} />
+                            </Col>
+                            <Col className='cust-width-160'>
+                                <Button className='w-100' disabled={state} onClick={() => requestCode()}>
+                                    {state ?
+                                        (veriCodeLoading ?
+                                            (<span>
+                                                <Spinner size='sm' animation="border" role="status" />
+                                                <span className='px-1'>获取验证码</span>
+                                            </span>) :
+                                            (<Timer seconds={60} formatter={"已发送({0})"} onCompleted={() => setState(false)} />)
+                                        ) :
+                                        "获取验证码"
+                                    }
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                    <Button variant="primary" type="submit" disabled={submitLoading}>
+                        {submitLoading ? <span><Spinner size='sm' animation="border" role="status" ></Spinner><span className='px-1'>登录</span></span> : "登录"}
+                    </Button>
+                    <Button onClick={() => { Board.token.set("???") }}>??</Button>
+                </Form>
+            </div>
+        </Container>
+
     );
 }
 

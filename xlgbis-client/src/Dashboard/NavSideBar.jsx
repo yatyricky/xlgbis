@@ -61,7 +61,7 @@ export default () => {
     }
 
     return (
-        <Col className="col-1 bg-light cust-side-nav">
+        <Col className="px-0 col-1 bg-light cust-side-nav">
             <Accordion defaultActiveKey={['home', "acc_closing"]} alwaysOpen>
 
                 <Accordion.Item eventKey="home">

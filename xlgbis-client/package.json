@@ -1,5 +1,5 @@
 {
-  "name": "react-webpack-from-scratch",
+  "name": "xlgbis",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "build": "webpack --mode production"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nef.",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.7.2",

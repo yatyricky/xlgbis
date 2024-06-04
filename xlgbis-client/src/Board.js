@@ -106,6 +106,9 @@ class Board {
     static token = new WatchableValue();
     static panels = new WatchableArray(); // key, type, place, title
     static userName = new WatchableValue();
+    static vw = new WatchableValue();
+    static vh = new WatchableValue();
+    static viewport = new WatchableValue()
 }
 
 window.dbgBoard = Board

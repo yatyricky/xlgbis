@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Tabs, Tab, Button, Col, Row, Container } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Tabs, Tab, Col, Row, Container } from "react-bootstrap";
 import Board from "../Board.js";
-import Vector2 from "../Vector2.js";
-import Rect from "../Rect.js";
+import Vector2 from "../Maths/Vector2.js";
+import Rect from "../Maths/Rect.js";
 import Header from "./Header.jsx";
 import NavSideBar from "./NavSideBar.jsx";
 import UserList from "../User/UserList.jsx";
+import { Transform } from "../Maths/Transform.js";
 
 let tempDragKey = null
 let beginDragPos = null
@@ -99,7 +100,7 @@ export default () => {
                 eventKey={e.key}
                 key={i}
                 title={(
-                    <Container fluid className="px-0" onMouseDown={() => beginDragTab(e.key)}>
+                    <Container data-label="panel-tab" fluid className="px-0" onMouseDown={() => beginDragTab(e.key)}>
                         <Row className="mx-0">
                             <Col className="px-1 col-auto">{e.title}</Col>
                             {((e.place === "left" && e.key === leftPanelKey) || (e.place === "right" && e.key === rightPanelKey)) ?
@@ -107,7 +108,7 @@ export default () => {
                         </Row>
                     </Container>
                 )}>
-                {(<div className="mx-0 py-1">
+                {(<div className="py-1">
                     {e.type === "user_manager" ? <UserList /> : <></>}
                 </div>
                 )}
@@ -115,10 +116,11 @@ export default () => {
         )
     }
 
-    let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-    leftDrop.set(200 - 10, 45, (vw - 200) / 2 - 10, vh - 100)
-    rightDrop.set(200 - 10 + (vw - 200) / 2, 45, (vw - 200) / 2 - 5, vh - 100)
+    let refWs = useRef(null)
+    if (refWs.current) {
+        leftDrop = Transform(refWs.current, { xmin: 0, xmax: 0.5, ymin: 0, ymax: 1 }, new Rect(0, 0, -12, -12))
+        rightDrop = Transform(refWs.current, { xmin: 0.5, xmax: 1, ymin: 0, ymax: 1 }, new Rect(0, 0, -12, -12))
+    }
 
     return (
         <Container fluid className="px-0 h-100" onMouseDown={(evt) => beginDrag(evt)} onMouseUp={(evt) => endDrag(evt)} onMouseMove={(evt) => doDrag(evt)}>
@@ -149,18 +151,18 @@ export default () => {
                 height: rightDrop.h,
                 zIndex: 99
             }} />
-            <Row className="h-100 w-100">
-                <div className="d-flex flex-column">
+            <Row className="mx-0 h-100">
+                <div className="d-flex flex-column px-0">
                     <Header />
-                    <Row className="flex-grow-1">
+                    <Row className="mx-0 flex-grow-1">
                         <NavSideBar />
-                        <Col className="pl-1">
+                        <div data-label="workspace" ref={refWs} className="px-0 col">
                             {(() => {
                                 let left = panels.filter(e => e.place === "left")
                                 let right = panels.filter(e => e.place === "right")
                                 if (left.length > 0 && right.length > 0) {
                                     return (
-                                        <Row className="h-100">
+                                        <Row className="mx-0 h-100">
                                             <Col className="px-1 border border-secondary">
                                                 <Tabs
                                                     variant="underline"
@@ -179,7 +181,7 @@ export default () => {
                                     )
                                 } else {
                                     return (
-                                        <Row className="h-100">
+                                        <Row className="mx-0 h-100">
                                             <Col className="px-1 border border-secondary">
                                                 <Tabs
                                                     variant="underline"
@@ -191,7 +193,7 @@ export default () => {
                                     )
                                 }
                             })()}
-                        </Col>
+                        </div>
                     </Row>
                 </div>
             </Row>
