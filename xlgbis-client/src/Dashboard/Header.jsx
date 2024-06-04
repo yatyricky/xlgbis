@@ -1,4 +1,5 @@
 import React from "react"
+import { Col, Row, Image, Dropdown } from "react-bootstrap";
 import Board from "../Board";
 
 export default () => {

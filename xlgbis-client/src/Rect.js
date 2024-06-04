@@ -17,8 +17,4 @@ export default class Rect {
         return this.x <= p.x && p.x <= this.x + this.w
             && this.y <= p.y && p.y <= this.y + this.h
     }
-
-    ToString() {
-        return `(${this.x},${this.y},${this.w},${this.h})`
-    }
 }

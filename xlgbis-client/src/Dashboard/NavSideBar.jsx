@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Button, Col } from "react-bootstrap";
+import Accordion from 'react-bootstrap/Accordion';
 import Board from "../Board.js";
 import HttpTask from "../HttpTask.js";
 
