@@ -42,6 +42,6 @@ const columns = [
 
 export default () => {
     return (
-        <VirtualTable scroll={{ y: 200 }} height={600} data={data} columns={columns} itemKey={(e) => e.id} />
+        <VirtualTable scroll={{ y: 200 }} data={data} columns={columns} rowKey={(e) => e.id} />
     )
 }
