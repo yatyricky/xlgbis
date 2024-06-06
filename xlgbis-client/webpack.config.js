@@ -7,7 +7,7 @@ module.exports = {
   entry: path.join(__dirname, "src", "index.js"),
   output: {
     path: path.resolve(__dirname, "dist"),
-    clean:true
+    clean: true
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -34,6 +34,14 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
       },
     ]
   },

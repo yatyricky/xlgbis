@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useLayoutEffect, useState } from "react"
 import HttpTask from "../HttpTask";
 import { Container, Spinner } from "react-bootstrap";
 import Board from "../Board";
-import VirtualTable from "rc-table/lib/VirtualTable"
+// import VirtualTable from "rc-table/lib/VirtualTable"
+import { Table } from "@kdcloudjs/kdesign"
 
 let data = []
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 30000; i++) {
     data[i] = {
         id: i,
         name: Array(Math.floor(Math.random() * 5) + 3).fill(1).map(e => String.fromCharCode(Math.floor(Math.random() * 26) + 65)).join(""),
@@ -13,35 +14,87 @@ for (let i = 0; i < 10000; i++) {
     }
 }
 
-const columns = [
+const _columns = [
     {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
+        code: 'id',
+        name: 'ID',
+        // key: 'id',
         width: 50,
+        // getSpanRect: (value, row, rowIndex) => {
+        //     if (rowIndex === 0) {
+        //         return {
+        //             left: 0,
+        //             right: 2,
+        //             top: rowIndex,
+        //             bottom: rowIndex + 2
+        //         }
+        //     }
+        // }
+        columnResize: true,
     },
     {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        code: 'name',
+        name: 'Name',
+        // key: 'name',
         width: 100,
+        columnResize: true,
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        code: 'age',
+        name: 'Age',
+        // key: 'age',
         width: 75,
+        columnResize: true,
     },
     {
-        title: 'Editable',
-        dataIndex: '',
-        key: 'editable',
-        render: () => <input></input>,
+        code: '',
+        name: 'Editable',
+        // key: 'editable',
+        // render: () => <input></input>,
     },
 ];
 
 export default () => {
+    const [columns, setColumns] = useState(_columns)
+    const handleColumnDragStopped = (columnMoved, nextColumns) => {
+        const columnSeq = nextColumns.reduce((result, col, colIndex) => {
+            result[col.code] = colIndex
+            return result
+        }, {})
+        setColumns(
+            _columns.reduce((result, col) => {
+                result[columnSeq[col.code]] = {
+                    ...col
+                }
+                return result
+            }, [])
+        )
+    }
+
     return (
-        <VirtualTable scroll={{ y: 200 }} data={data} columns={columns} rowKey={(e) => e.id} />
+        <>
+            <div>Before contents</div>
+            <Table
+                useVirtual={true}
+                style={{ overflow: "auto", height: 600 }}
+                dataSource={data}
+                columns={columns}
+                columnDrag={{
+                    onColumnDragStopped: handleColumnDragStopped
+                }}
+                columnResize={true}
+                primaryKey={(e) => "" + e.id}
+                rowSelection={{
+                    // type: "checkbox",
+                    highlightRowWhenSelected: true,
+                    clickArea: "row",
+                    column: {
+                        // width:0,
+                        hidden: true
+                    }
+                }}
+            />
+            <div>succeeding contents</div>
+        </>
     )
 }
