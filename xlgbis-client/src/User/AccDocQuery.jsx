@@ -38,6 +38,9 @@ const _columns = [
         // key: 'name',
         width: 100,
         columnResize: true,
+        features: {
+            filterable: true
+        },
     },
     {
         code: 'age',
@@ -45,12 +48,9 @@ const _columns = [
         // key: 'age',
         width: 75,
         columnResize: true,
-    },
-    {
-        code: '',
-        name: 'Editable',
-        // key: 'editable',
-        // render: () => <input></input>,
+        features: {
+            filterable: true
+        },
     },
 ];
 
@@ -69,6 +69,11 @@ export default () => {
                 return result
             }, [])
         )
+    }
+
+    const filter = {
+        defaultFilters: [
+        ],
     }
 
     return (
@@ -93,6 +98,7 @@ export default () => {
                         hidden: true
                     }
                 }}
+                filter={filter}
             />
             <div>succeeding contents</div>
         </>
