@@ -42,14 +42,7 @@ const App = () => {
     }, [Board.vw.get(), Board.vh.get()])
 
     return (
-        <>
-            <Button onClick={() => Message.error({
-                content: `unknown panel blah`,
-                closable: true,
-                duration: 0
-            })}>Click me</Button>
-            {/* {sceneIndex === 0 ? <LoginPanel /> : <Dashboard />} */}
-        </>
+        sceneIndex === 0 ? <LoginPanel /> : <Dashboard />
     );
 };
 
