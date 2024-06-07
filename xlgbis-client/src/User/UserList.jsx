@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import HttpTask from "../HttpTask";
-import { Container, Spinner } from "react-bootstrap";
 import Board from "../Board";
 import { Transform } from "../Maths/Transform";
 import Rect from "../Maths/Rect.js";

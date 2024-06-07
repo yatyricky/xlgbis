@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import HttpTask from "../HttpTask";
-import { Container, Spinner } from "react-bootstrap";
 import Board from "../Board";
 // import VirtualTable from "rc-table/lib/VirtualTable"
 import { Table } from "@kdcloudjs/kdesign"

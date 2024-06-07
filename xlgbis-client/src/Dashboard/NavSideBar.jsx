@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import Board from "../Board.js";
 import HttpTask from "../HttpTask.js";
 import DropdownButtonExt from "./DropdownButtonExt.jsx";
@@ -40,9 +39,9 @@ export default () => {
     function openPanel(type, title) {
         let define = PanelDefine[type]
         if (!define) {
-            return Board.toasts.push({
-                level: 2,
-                message: `unknown panel ${type}`
+            Message.error({
+                content: `unknown panel ${type}`,
+                closable: true
             })
         }
 

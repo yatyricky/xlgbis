@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Tabs, Tab, Col, Row, Container } from "react-bootstrap";
 import Board from "../Board.js";
 import Vector2 from "../Maths/Vector2.js";
 import Rect from "../Maths/Rect.js";

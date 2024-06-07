@@ -2,6 +2,7 @@ import axios from "axios";
 import Config from "./Config.js";
 import Board from "./Board.js";
 import Code from "./Code.js";
+import { Button, Message } from '@kdcloudjs/kdesign'
 
 function defaultFunc() {
 }
@@ -28,9 +29,9 @@ function HttpTask(path, body, onLoading, onData, onError, suppressErrorToast, ad
     axios.post(`${Config.server}${path}`, body, { headers }).then(resp => {
         if (resp.data.code !== 0) {
             if (suppressErrorToast !== true) {
-                Board.toasts.push({
-                    level: 2,
-                    message: Code.ToMessage(resp.data.code)
+                Message.error({
+                    content: Code.ToMessage(resp.data.code),
+                    closable: true
                 })
             }
 
@@ -42,9 +43,9 @@ function HttpTask(path, body, onLoading, onData, onError, suppressErrorToast, ad
         }
     }).catch(err => {
         if (suppressErrorToast !== true) {
-            Board.toasts.push({
-                level: 2,
-                message: Code.ToMessage(Code.Codes.NETWORK_CLIENT_ERROR)
+            Message.error({
+                content: Code.ToMessage(Code.Codes.NETWORK_CLIENT_ERROR),
+                closable: true
             })
         }
 

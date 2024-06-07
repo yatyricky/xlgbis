@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState, useLayoutEffect } from 'react';
 import "./App.css";
 import LoginPanel from './LoginPanel.jsx';
-import { ToastContainer } from 'react-bootstrap';
 import Board from './Board.js';
-import DismissableToast from './DismissableToast.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
 import Rect from './Maths/Rect.js';
+import { Message, Button } from '@kdcloudjs/kdesign'
 
 function GetViewportWidth() {
     return Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
@@ -16,12 +15,6 @@ function GetViewportHeight() {
 }
 
 const App = () => {
-    // toast
-    let [toasts, setToasts] = useState([])
-    let update = useCallback((messages) => {
-        setToasts([...messages])
-    }, [Board.toasts])
-
     // scene
     let [sceneIndex, setSceneIndex] = useState(0)
     let updateSceneIndex = useCallback(val => {
@@ -29,13 +22,11 @@ const App = () => {
     }, [Board.token])
 
     useEffect(() => {
-        Board.toasts.subscribe(update)
         Board.token.subscribe(updateSceneIndex)
         return () => {
-            Board.toasts.unsubscribe(update)
             Board.token.unsubscribe(updateSceneIndex)
         }
-    }, [Board.toasts, Board.token])
+    }, [Board.token])
 
     useLayoutEffect(() => {
         function CalculateViewportWidth() {
@@ -50,12 +41,16 @@ const App = () => {
         return () => { window.removeEventListener('resize', CalculateViewportWidth); }
     }, [Board.vw.get(), Board.vh.get()])
 
-    return (<>
-        <ToastContainer className="p-3" position="top-center" style={{ zIndex: 1 }}>
-            {toasts.map((toastData, i) => <DismissableToast key={i} data={toastData} />)}
-        </ToastContainer>
-        {sceneIndex === 1 ? <Dashboard /> : <LoginPanel />}
-    </>);
+    return (
+        <>
+            <Button onClick={() => Message.error({
+                content: `unknown panel blah`,
+                closable: true,
+                duration: 0
+            })}>Click me</Button>
+            {/* {sceneIndex === 0 ? <LoginPanel /> : <Dashboard />} */}
+        </>
+    );
 };
 
 export default App;

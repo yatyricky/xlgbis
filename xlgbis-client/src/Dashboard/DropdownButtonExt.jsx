@@ -1,5 +1,4 @@
 import React from "react"
-import { Dropdown, ButtonGroup } from "react-bootstrap"
 
 export default ({ children, id, title, variant, icon }) => {
     return (

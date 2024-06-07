@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Spinner, Container } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Timer from "./Timer.jsx"
 import Board from "./Board.js"
-import Image from 'react-bootstrap/Image';
 import HttpTask from './HttpTask.js';
+import { Layout, Button, Form, Input } from '@kdcloudjs/kdesign'
 
 function LoginPanel() {
     let [inAcc, setInAcc] = useState("")
@@ -100,7 +97,6 @@ function LoginPanel() {
                 </Form>
             </div>
         </Container>
-
     );
 }
 
