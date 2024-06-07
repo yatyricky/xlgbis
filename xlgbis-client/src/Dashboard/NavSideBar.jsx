@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Board from "../Board.js";
 import HttpTask from "../HttpTask.js";
-import DropdownButtonExt from "./DropdownButtonExt.jsx";
 import UserList from "../User/UserList.jsx";
 import AccDocQuery from "../User/AccDocQuery.jsx";
+import { Layout, Menu, Icon } from '@kdcloudjs/kdesign'
 
 export const PanelDefine = {
     user_manager: { comp: UserList, unique: true },
@@ -58,32 +58,47 @@ export default () => {
     }
 
     return (
-        <div className="px-0 bg-light" style={{ width: "120px" }}>
-            <ButtonGroup vertical style={{ width: "100%" }}>
-                <Button style={{ textAlign: "left" }} variant="light"><i className="bi bi-house" style={{ margin: "4px" }} />主页</Button>
-
-                <DropdownButtonExt title="凭证" icon="bi bi-file-text" id="acc_docs" variant="light">
-                    <Dropdown.Item eventKey="accdoc_new" >录凭证</Dropdown.Item>
-                    <Dropdown.Item eventKey="accdoc_query" >查凭证</Dropdown.Item>
-                </DropdownButtonExt>
-
-                <DropdownButtonExt title="报表" icon="bi bi-table" id="acc_reports" variant="light">
-                    <Dropdown.Item eventKey="accrep_balsht" >资产负债表</Dropdown.Item>
-                    <Dropdown.Item eventKey="accrep_revsht" >利润表</Dropdown.Item>
-                    <Dropdown.Item eventKey="accrep_cassht" >现金流量表</Dropdown.Item>
-                </DropdownButtonExt>
-
-                <Button style={{ textAlign: "left" }} onClick={() => openPanel("acc_query", "查凭证")} variant="light">
-                    <i className="bi bi-check-all" style={{ margin: "4px" }} />
-                    结账
-                </Button>
-
+        <Layout.Sider
+            width={200}
+            className="site-layout-background"
+            style={{
+                backgroundColor: '#fff',
+                listStyleType: "none",
+                // padding: "0px"
+            }}>
+            <Menu
+                mode="inline"
+                theme="light"
+                defaultSelectedKey={'1'}
+                defaultOpenKeys={['sub1']}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRight: 0
+                }}
+                onClick={(e) => {
+                    if (e.key === "acc_close") {
+                        openPanel("acc_query", "查凭证")
+                    }
+                }}
+            >
+                <Menu.Item icon={<Icon type="dashboard" />} key="dashboard">主页</Menu.Item>
+                <Menu.SubMenu key="acc_docs" icon={<Icon type="my-receipt" />} onClick={"clicked menu"} title="凭证">
+                    <Menu.Item key="acc_docs_new" onClick={"clicked opt1"}>录凭证</Menu.Item>
+                    <Menu.Item key="acc_docs_query">查凭证</Menu.Item>
+                </Menu.SubMenu>
+                <Menu.SubMenu key="acc_reports" icon={<Icon type="report-form" />} title="报表">
+                    <Menu.Item key="acc_reports_balance">资产负债表</Menu.Item>
+                    <Menu.Item key="acc_reports_income">利润表</Menu.Item>
+                    <Menu.Item key="acc_reports_cash">现金流量表</Menu.Item>
+                </Menu.SubMenu>
+                <Menu.Item key="acc_close" icon={<Icon type="lock-solid" />}>结账</Menu.Item>
                 {hasUserPermit ? (
-                    <DropdownButtonExt title="System" icon="bi bi-gear" id="system" variant="light">
-                        <Dropdown.Item eventKey="accrep_balsht" onClick={() => openPanel("user_manager", "User Manager")}>User</Dropdown.Item>
-                    </DropdownButtonExt>
+                    <Menu.SubMenu key="system" icon={<Icon type="setting" />} title="System">
+                        <Menu.Item key="user_manage">User Manager</Menu.Item>
+                    </Menu.SubMenu>
                 ) : <></>}
-            </ButtonGroup>
-        </div>
+            </Menu>
+        </Layout.Sider>
     )
 }

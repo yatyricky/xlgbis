@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import Board from "../Board.js";
 import Vector2 from "../Maths/Vector2.js";
 import Rect from "../Maths/Rect.js";
-import Header from "./Header.jsx";
+import MyHeader from "./MyHeader.jsx";
 import NavSideBar, { PanelDefine } from "./NavSideBar.jsx";
-import UserList from "../User/UserList.jsx";
 import { Transform } from "../Maths/Transform.js";
 import PanelTabButton from "./PanelTabButton.jsx";
+import { Layout, SplitPanel } from '@kdcloudjs/kdesign'
+import Pane from "./Pane.jsx";
 
 let tempDragKey = null
 let beginDragPos = null
@@ -32,7 +33,7 @@ export default () => {
         Board.panels.filterInPlace((e) => e.key !== key)
     }
 
-    // drag
+    //#region drag
     let v2 = new Vector2()
     let [dragData, setDragData] = useState({
         key: "",
@@ -125,80 +126,100 @@ export default () => {
     }
 
     return (
-        <Container fluid className="px-0 h-100" onMouseDown={(evt) => beginDrag(evt)} onMouseUp={(evt) => endDrag(evt)} onMouseMove={(evt) => doDrag(evt)}>
-            <div style={{
-                position: "fixed",
-                display: String.isEmptyText(dragData.key) ? "none" : "block",
-                top: dragData.y,
-                left: dragData.x,
-                zIndex: 100
-            }}>{panels.find(e => e.key === dragData.key)?.title}</div>
-            <div style={{
-                position: "fixed",
-                display: String.isEmptyText(dragData.key) ? "none" : "block",
-                backgroundColor: leftDrop.contains(currentDragPos) ? "#99FF9999" : "#99FF9933",
-                left: leftDrop.x,
-                top: leftDrop.y,
-                width: leftDrop.w,
-                height: leftDrop.h,
-                zIndex: 99
-            }} />
-            <div style={{
-                position: "fixed",
-                display: String.isEmptyText(dragData.key) ? "none" : "block",
-                backgroundColor: rightDrop.contains(currentDragPos) ? "#99FF9999" : "#99FF9933",
-                left: rightDrop.x,
-                top: rightDrop.y,
-                width: rightDrop.w,
-                height: rightDrop.h,
-                zIndex: 99
-            }} />
-            <Row className="mx-0 h-100">
-                <Col className="px-0 d-flex flex-column">
-                    <Header />
-                    <Row className="mx-0 flex-grow-1" style={{ flexWrap: "nowrap" }}>
-                        <NavSideBar />
-                        <div id="workspace" data-label="workspace" ref={refWs} className="px-0 col">
-                            {(() => {
-                                let left = panels.filter(e => e.place === "left")
-                                let right = panels.filter(e => e.place === "right")
-                                if (left.length > 0 && right.length > 0) {
-                                    return (
-                                        <Row className="mx-0 h-100">
-                                            <Col className="px-1 col-6 border border-secondary">
-                                                <Tabs
-                                                    variant="underline"
-                                                    activeKey={leftPanelKey}
-                                                    onSelect={(k) => setLeftPanelKey(k)}
-                                                >{left.map(renderPanelTab)}</Tabs>
-                                            </Col>
-                                            <Col className="px-1 col-6 border border-secondary">
-                                                <Tabs
-                                                    variant="underline"
-                                                    activeKey={rightPanelKey}
-                                                    onSelect={(k) => setRightPanelKey(k)}
-                                                >{right.map(renderPanelTab)}</Tabs>
-                                            </Col>
-                                        </Row>
-                                    )
-                                } else {
-                                    return (
-                                        <Row className="mx-0 h-100">
-                                            <Col className="px-1 flex-grow-1 border border-secondary">
-                                                <Tabs
-                                                    variant="underline"
-                                                    activeKey={leftPanelKey}
-                                                    onSelect={(k) => setLeftPanelKey(k)}
-                                                >{panels.map(renderPanelTab)}</Tabs>
-                                            </Col>
-                                        </Row>
-                                    )
-                                }
-                            })()}
-                        </div>
-                    </Row>
-                </Col>
-            </Row>
-        </Container>
+        <Layout>
+            <MyHeader />
+            <Layout>
+                <NavSideBar />
+                <Layout>
+                    {/* <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb.Item>Home</Breadcrumb.Item>
+            <Breadcrumb.Item>List</Breadcrumb.Item>
+            <Breadcrumb.Item>App</Breadcrumb.Item>
+           </Breadcrumb> */}
+                    <Layout.Content
+                        className="site-layout-background"
+                        style={{
+                            backgroundColor: '#fff'
+                        }}>
+                        <SplitPanel firstSlot={<Pane place="left" />} secondSlot={<Pane place="right" />} />
+                    </Layout.Content>
+                </Layout>
+            </Layout>
+        </Layout>
+        // <Container fluid className="px-0 h-100" onMouseDown={(evt) => beginDrag(evt)} onMouseUp={(evt) => endDrag(evt)} onMouseMove={(evt) => doDrag(evt)}>
+        //     <div style={{
+        //         position: "fixed",
+        //         display: String.isEmptyText(dragData.key) ? "none" : "block",
+        //         top: dragData.y,
+        //         left: dragData.x,
+        //         zIndex: 100
+        //     }}>{panels.find(e => e.key === dragData.key)?.title}</div>
+        //     <div style={{
+        //         position: "fixed",
+        //         display: String.isEmptyText(dragData.key) ? "none" : "block",
+        //         backgroundColor: leftDrop.contains(currentDragPos) ? "#99FF9999" : "#99FF9933",
+        //         left: leftDrop.x,
+        //         top: leftDrop.y,
+        //         width: leftDrop.w,
+        //         height: leftDrop.h,
+        //         zIndex: 99
+        //     }} />
+        //     <div style={{
+        //         position: "fixed",
+        //         display: String.isEmptyText(dragData.key) ? "none" : "block",
+        //         backgroundColor: rightDrop.contains(currentDragPos) ? "#99FF9999" : "#99FF9933",
+        //         left: rightDrop.x,
+        //         top: rightDrop.y,
+        //         width: rightDrop.w,
+        //         height: rightDrop.h,
+        //         zIndex: 99
+        //     }} />
+        //     <Row className="mx-0 h-100">
+        //         <Col className="px-0 d-flex flex-column">
+        //             <Header />
+        //             <Row className="mx-0 flex-grow-1" style={{ flexWrap: "nowrap" }}>
+        //                 <NavSideBar />
+        //                 <div id="workspace" data-label="workspace" ref={refWs} className="px-0 col">
+        //                     {(() => {
+        //                         let left = panels.filter(e => e.place === "left")
+        //                         let right = panels.filter(e => e.place === "right")
+        //                         if (left.length > 0 && right.length > 0) {
+        //                             return (
+        //                                 <Row className="mx-0 h-100">
+        //                                     <Col className="px-1 col-6 border border-secondary">
+        //                                         <Tabs
+        //                                             variant="underline"
+        //                                             activeKey={leftPanelKey}
+        //                                             onSelect={(k) => setLeftPanelKey(k)}
+        //                                         >{left.map(renderPanelTab)}</Tabs>
+        //                                     </Col>
+        //                                     <Col className="px-1 col-6 border border-secondary">
+        //                                         <Tabs
+        //                                             variant="underline"
+        //                                             activeKey={rightPanelKey}
+        //                                             onSelect={(k) => setRightPanelKey(k)}
+        //                                         >{right.map(renderPanelTab)}</Tabs>
+        //                                     </Col>
+        //                                 </Row>
+        //                             )
+        //                         } else {
+        //                             return (
+        //                                 <Row className="mx-0 h-100">
+        //                                     <Col className="px-1 flex-grow-1 border border-secondary">
+        //                                         <Tabs
+        //                                             variant="underline"
+        //                                             activeKey={leftPanelKey}
+        //                                             onSelect={(k) => setLeftPanelKey(k)}
+        //                                         >{panels.map(renderPanelTab)}</Tabs>
+        //                                     </Col>
+        //                                 </Row>
+        //                             )
+        //                         }
+        //                     })()}
+        //                 </div>
+        //             </Row>
+        //         </Col>
+        //     </Row>
+        // </Container>
     )
 }

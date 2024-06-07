@@ -22,20 +22,6 @@ body {
     background-size: cover;
 }
 
-.cust-width-160 {
-    max-width: 160px;
-    min-width: 160px;
-}
-
-.cust-width-200 {
-    max-width: 200px;
-    min-width: 200px;
-}
-
-.nav-underline {
-    background-color: rgba(0, 0, 0, 0.03);
-}
-
-.tab-content {
-    flex-grow: 1;
+ul{
+    padding: 0;
 }
