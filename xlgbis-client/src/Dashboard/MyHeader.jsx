@@ -11,6 +11,7 @@ export default () => {
     return (
         <Layout.Header
             style={{
+                height: 50,
                 backgroundColor: "rgb(63, 81, 180, 0.1)"
             }}>
             <Row wrap={false}>
@@ -32,13 +33,15 @@ export default () => {
                     <Button.Dropdown overlay={[
                         {
                             value: '1',
-                            label: '设置'
+                            label: '设置',
+                            action: () => {}
                         },
                         {
                             value: '2',
-                            label: '退出'
+                            label: '退出',
+                            action: logout
                         },
-                    ]} onItemClick={(e) => console.log('onItemClick', e)}>
+                    ]} onItemClick={(e) => e.action()}>
                         {Board.userName.get()}
                     </Button.Dropdown>
                 </Col>

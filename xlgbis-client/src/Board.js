@@ -75,6 +75,10 @@ class WatchableArray extends Watchable {
         return this.#values.filter(predicate)
     }
 
+    find(predicate) {
+        return this.#values.find(predicate)
+    }
+
     set(index, elem) {
         this.#values[index] = elem
         this._invokeHandlers(this.#values)
@@ -84,6 +88,10 @@ class WatchableArray extends Watchable {
         for (const elem of this.#values) {
             action(elem)
         }
+        this._invokeHandlers(this.#values)
+    }
+
+    invokeHandlers() {
         this._invokeHandlers(this.#values)
     }
 }

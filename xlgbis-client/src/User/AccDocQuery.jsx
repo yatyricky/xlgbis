@@ -80,7 +80,7 @@ export default () => {
             <div>Before contents</div>
             <Table
                 useVirtual={true}
-                style={{ overflow: "auto", height: 600 }}
+                style={{ overflow: "auto", height: 800 }}
                 dataSource={data}
                 columns={columns}
                 columnDrag={{
