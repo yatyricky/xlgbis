@@ -3,7 +3,8 @@ import Board from "../Board.js";
 import HttpTask from "../HttpTask.js";
 import UserList from "../User/UserList.jsx";
 import AccDocQuery from "../User/AccDocQuery.jsx";
-import { Layout, Menu, Icon } from '@kdcloudjs/kdesign'
+import { Layout, Menu } from '@kdcloudjs/kdesign'
+import { House, JournalCheck, JournalText, FileText, FileEarmarkSpreadsheet, CurrencyYen, Gear, Wrench } from "react-bootstrap-icons"
 
 export const PanelDefine = {
     user_manager: { comp: UserList, unique: true },
@@ -82,19 +83,29 @@ export default () => {
                     }
                 }}
             >
-                <Menu.Item icon={<Icon type="dashboard" />} key="dashboard">主页</Menu.Item>
-                <Menu.SubMenu key="acc_docs" icon={<Icon type="my-receipt" />} onClick={"clicked menu"} title="凭证">
+                <Menu.Item icon={<House />} key="dashboard">主页</Menu.Item>
+                <Menu.SubMenu key="acc_docs" icon={<FileText />} onClick={"clicked menu"} title="凭证">
                     <Menu.Item key="acc_docs_new" onClick={"clicked opt1"}>录凭证</Menu.Item>
                     <Menu.Item key="acc_docs_query">查凭证</Menu.Item>
+                    <Menu.Item key="acc_docs_attach">附件</Menu.Item>
                 </Menu.SubMenu>
-                <Menu.SubMenu key="acc_reports" icon={<Icon type="report-form" />} title="报表">
+                <Menu.SubMenu key="book" icon={<JournalText />} onClick={"clicked menu"} title="账簿">
+                    <Menu.Item key="book_ledger" onClick={"clicked opt1"}>明细账</Menu.Item>
+                    <Menu.Item key="book_sheet">科目余额表</Menu.Item>
+                </Menu.SubMenu>
+                <Menu.SubMenu key="acc_reports" icon={<FileEarmarkSpreadsheet />} title="报表">
                     <Menu.Item key="acc_reports_balance">资产负债表</Menu.Item>
                     <Menu.Item key="acc_reports_income">利润表</Menu.Item>
                     <Menu.Item key="acc_reports_cash">现金流量表</Menu.Item>
                 </Menu.SubMenu>
-                <Menu.Item key="acc_close" icon={<Icon type="lock-solid" />}>结账</Menu.Item>
+                <Menu.Item key="acc_close" icon={<JournalCheck />}>结账</Menu.Item>
+                <Menu.Item key="teller_diary" icon={<CurrencyYen />}>日记账</Menu.Item>
+                <Menu.SubMenu key="settings" icon={<Gear />} title="设置">
+                    <Menu.Item key="settings_accounts">科目</Menu.Item>
+                    <Menu.Item key="settings_accounts_aux">辅助核算</Menu.Item>
+                </Menu.SubMenu>
                 {hasUserPermit ? (
-                    <Menu.SubMenu key="system" icon={<Icon type="setting" />} title="System">
+                    <Menu.SubMenu key="system" icon={<Wrench />} title="System">
                         <Menu.Item key="user_manage">User Manager</Menu.Item>
                     </Menu.SubMenu>
                 ) : <></>}
