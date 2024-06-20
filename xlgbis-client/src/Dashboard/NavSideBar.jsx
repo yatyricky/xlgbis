@@ -4,7 +4,7 @@ import HttpTask from "../HttpTask.js";
 import UserList from "../User/UserList.jsx";
 import AccDocQuery from "../User/AccDocQuery.jsx";
 import { Layout, Menu } from '@kdcloudjs/kdesign'
-import { House, JournalCheck, JournalText, FileText, FileEarmarkSpreadsheet, CurrencyYen, Gear, Wrench } from "react-bootstrap-icons"
+import { House, JournalCheck, JournalText, FileText, FileEarmarkSpreadsheet, CurrencyYen, Gear, Tools } from "react-bootstrap-icons"
 
 export const PanelDefine = {
     user_manager: { comp: UserList, unique: true },
@@ -78,16 +78,17 @@ export default () => {
                     borderRight: 0
                 }}
                 onClick={(e) => {
+                    console.log(e.key);
                     if (e.key === "acc_close") {
                         openPanel("acc_query", "查凭证")
                     }
                 }}
             >
                 <Menu.Item icon={<House />} key="dashboard">主页</Menu.Item>
-                <Menu.SubMenu key="acc_docs" icon={<FileText />} onClick={"clicked menu"} title="凭证">
-                    <Menu.Item key="acc_docs_new" onClick={"clicked opt1"}>录凭证</Menu.Item>
-                    <Menu.Item key="acc_docs_query">查凭证</Menu.Item>
-                    <Menu.Item key="acc_docs_attach">附件</Menu.Item>
+                <Menu.SubMenu key="accdocs" icon={<FileText />} onClick={"clicked menu"} title="凭证">
+                    <Menu.Item key="accdocs_new" onClick={"clicked opt1"}>录凭证</Menu.Item>
+                    <Menu.Item key="accdocs_query">查凭证</Menu.Item>
+                    <Menu.Item key="accdocs_attach">附件</Menu.Item>
                 </Menu.SubMenu>
                 <Menu.SubMenu key="book" icon={<JournalText />} onClick={"clicked menu"} title="账簿">
                     <Menu.Item key="book_ledger" onClick={"clicked opt1"}>明细账</Menu.Item>
@@ -105,7 +106,7 @@ export default () => {
                     <Menu.Item key="settings_accounts_aux">辅助核算</Menu.Item>
                 </Menu.SubMenu>
                 {hasUserPermit ? (
-                    <Menu.SubMenu key="system" icon={<Wrench />} title="System">
+                    <Menu.SubMenu key="system" icon={<Tools />} title="System">
                         <Menu.Item key="user_manage">User Manager</Menu.Item>
                     </Menu.SubMenu>
                 ) : <></>}

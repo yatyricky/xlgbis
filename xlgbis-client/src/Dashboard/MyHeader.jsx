@@ -1,6 +1,6 @@
 import React from "react"
 import Board from "../Board";
-import { Layout, Menu, Icon, Row, Col, Button } from '@kdcloudjs/kdesign'
+import { Layout, Row, Col, Button } from '@kdcloudjs/kdesign'
 
 export default () => {
     let logout = () => {
