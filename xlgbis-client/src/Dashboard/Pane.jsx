@@ -26,7 +26,6 @@ export default ({ place }) => {
     }
 
     let closeBtn = (evt) => {
-        console.log(evt);
         if (typeof evt === "object") {
             return
         }

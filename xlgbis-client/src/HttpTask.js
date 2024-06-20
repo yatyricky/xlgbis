@@ -2,7 +2,7 @@ import axios from "axios";
 import Config from "./Config.js";
 import Board from "./Board.js";
 import Code from "./Code.js";
-import { Button, Message } from '@kdcloudjs/kdesign'
+import { Message } from '@kdcloudjs/kdesign'
 
 function defaultFunc() {
 }
@@ -16,8 +16,10 @@ function defaultFunc() {
  * @param {((code: number) => void) | undefined} onError 
  * @param {boolean | undefined} suppressErrorToast 
  * @param {Object} additionalHeaders
+ * @returns {AbortController}
  */
 function HttpTask(path, body, onLoading, onData, onError, suppressErrorToast, additionalHeaders) {
+    const controller = new AbortController();
     onLoading = onLoading || defaultFunc
     onData = onData || defaultFunc
     onError = onError || defaultFunc
@@ -26,7 +28,10 @@ function HttpTask(path, body, onLoading, onData, onError, suppressErrorToast, ad
         Authorization: `Bearer ${Board.token.get()}`,
         ...additionalHeaders
     }
-    axios.post(`${Config.server}${path}`, body, { headers }).then(resp => {
+    axios.post(`${Config.server}${path}`, body, {
+        headers,
+        signal: controller.signal
+    }).then(resp => {
         if (resp.data.code !== 0) {
             if (suppressErrorToast !== true) {
                 Message.error({
@@ -52,6 +57,7 @@ function HttpTask(path, body, onLoading, onData, onError, suppressErrorToast, ad
         onError(Code.Codes.NETWORK_CLIENT_ERROR)
         onLoading(false)
     })
+    return controller
 }
 
 export default HttpTask

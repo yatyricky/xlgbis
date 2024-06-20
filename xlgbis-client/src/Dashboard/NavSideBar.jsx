@@ -3,12 +3,12 @@ import Board from "../Board.js";
 import HttpTask from "../HttpTask.js";
 import UserList from "../User/UserList.jsx";
 import AccDocQuery from "../User/AccDocQuery.jsx";
-import { Layout, Menu } from '@kdcloudjs/kdesign'
+import { Layout, Menu, Message } from '@kdcloudjs/kdesign'
 import { House, JournalCheck, JournalText, FileText, FileEarmarkSpreadsheet, CurrencyYen, Gear, Tools } from "react-bootstrap-icons"
 
 export const PanelDefine = {
-    user_manager: { comp: UserList, unique: true },
-    acc_query: { comp: AccDocQuery },
+    user_manager: { comp: UserList, title: "User Manager", unique: true },
+    accdocs_query: { comp: AccDocQuery, title: "查凭证" },
 }
 
 export default () => {
@@ -40,11 +40,13 @@ export default () => {
     function openPanel(type, title) {
         let define = PanelDefine[type]
         if (!define) {
-            Message.error({
+            return Message.error({
                 content: `unknown panel ${type}`,
                 closable: true
             })
         }
+
+        title = title || define.title
 
         if (define.unique) {
             let find = Board.panels.filter(e => e.type === type)
@@ -77,12 +79,7 @@ export default () => {
                     height: '100%',
                     borderRight: 0
                 }}
-                onClick={(e) => {
-                    console.log(e.key);
-                    if (e.key === "acc_close") {
-                        openPanel("acc_query", "查凭证")
-                    }
-                }}
+                onClick={(e) => openPanel(e.key)}
             >
                 <Menu.Item icon={<House />} key="dashboard">主页</Menu.Item>
                 <Menu.SubMenu key="accdocs" icon={<FileText />} onClick={"clicked menu"} title="凭证">
@@ -107,7 +104,7 @@ export default () => {
                 </Menu.SubMenu>
                 {hasUserPermit ? (
                     <Menu.SubMenu key="system" icon={<Tools />} title="System">
-                        <Menu.Item key="user_manage">User Manager</Menu.Item>
+                        <Menu.Item key="user_manager">User Manager</Menu.Item>
                     </Menu.SubMenu>
                 ) : <></>}
             </Menu>
